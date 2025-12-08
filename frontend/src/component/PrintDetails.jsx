@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './PrintDetails.css';
+import './printdetails.css';
 
 export default function PrintDetails() {
   const navigate = useNavigate();
