@@ -1,7 +1,7 @@
 // src/component/TrackingPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./TrackingPage.css";
+import "./trackingPage.css";
 
 export default function TrackingPage() {
   const { shipmentId } = useParams();
