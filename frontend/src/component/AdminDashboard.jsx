@@ -85,7 +85,7 @@ useEffect(() => {
   
   const [newShipment, setNewShipment] = useState({  
     vehicleType: "",  
-    status: "scheduled",  
+    status: "Scheduled",  
     origin: "",  
     destination: "",  
     eta: "",  
@@ -129,6 +129,17 @@ useEffect(() => {
       setAdminNotes(saved);  
     }  
   }, [role, showNotifications]);  
+
+  useEffect(() => {
+  if (role !== "admin") return;
+
+  fetch(`http://localhost:8080/api/notifications?userId=admin&role=admin`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) setNotifications(data.data);
+    });
+}, [role]);
+
 
   useEffect(() => {
   if (showAddForm) document.body.classList.add("modal-open");
@@ -183,6 +194,22 @@ useEffect(() => {
     const interval = setInterval(checkPopupNotes, 5000);  
     return () => clearInterval(interval);  
   }, [role]);  
+
+
+  const addAdminNotification = async (message, type = "info") => {
+  await fetch("http://localhost:8080/api/notifications", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: "admin",
+      role: "admin",
+      message,
+      type
+    })
+  });
+};
+
+
   
   // Load saved image  
   useEffect(() => {  
@@ -486,67 +513,50 @@ const handleBookingSubmit = () => {
     }));  
   };  
   
-  const handleAddShipment = (e) => {  
-    e.preventDefault();  
-  
-    const requiredFields = [  
-      { key: "vehicleType", label: "Vehicle Type" },  
-      { key: "origin", label: "Origin" },  
-      { key: "destination", label: "Destination" },  
-      { key: "eta", label: "ETA" },  
-      { key: "load", label: "Load Description" },  
-      { key: "truck", label: "Truck Type" },  
-      { key: "container", label: "Container" },  
-      { key: "weight", label: "Weight" }  
-    ];  
-  
-    for (let field of requiredFields) {  
-      if (!newShipment[field.key] || newShipment[field.key].trim() === "") {  
-        alert(`Please fill ${field.label}`);  
-        return;  
-      }  
-    }  
-  
-    const shipmentId = generateShipmentId();  
-    const shipmentWithImage = {  
-      ...newShipment,  
-      image: newShipment.image ||   
-        "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=200&fit=crop&auto=format"  
-    };  
-  
-    const shipmentWithId = {  
-      ...shipmentWithImage,  
-      id: shipmentId,  
-      userId: "admin",  
-      createdAt: new Date().toISOString()  
-    };  
-  
-    setShipments([...shipments, shipmentWithId]);  
-    setShowAddForm(false);  
-  
-    setNewShipment({  
-      vehicleType: "",  
-      status: "Scheduled",  
-      origin: "",  
-      destination: "",  
-      eta: "",  
-      load: "",  
-      truck: "",  
-      container: "",  
-      weight: "",  
-      priority: false,  
-      image: "",  
-      driver: {  
-        name: "",  
-        phone: "",  
-        license: "",  
-        vehicle: ""  
-      }  
-    });  
-  
-    localStorage.removeItem('shipmentImages');  
-    addNotification(`New shipment created successfully! Shipment ID: ${shipmentId}`, 'success');  
-  };  
+const handleAddShipment = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("http://localhost:8080/api/shipments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+  vehicleType: newShipment.vehicleType.trim(),
+  status: newShipment.status,
+  origin: newShipment.origin.trim(),
+  destination: newShipment.destination.trim(),
+  eta: newShipment.eta,
+  load: newShipment.load,
+  truck: newShipment.truck,
+  container: newShipment.container,
+  weight: newShipment.weight,
+  priority: newShipment.priority,
+  image: newShipment.image,
+  userId: "admin"
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      alert(result.message);
+      return;
+    }
+
+    // update UI with data from backend
+    setShipments(prev => [result.data, ...prev]);
+
+    alert("Shipment saved to MongoDB successfully ✅");
+    setShowAddForm(false);
+
+  } catch (error) {
+    console.error(error);
+    alert("Backend error");
+  }
+};
+
   
   // Shipment actions  
   const handleDeleteShipment = (shipmentId) => {  
@@ -713,7 +723,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
         <div className="notifications-list">
           {notifications.slice(0, 8).map((notif) => (
             <div
-              key={notif.id}
+              key={notification._id}
               className={`notification-item ${notif.read ? 'read' : 'unread'} ${notif.type}`}
               onClick={() => markAsRead(notif.id)}
             >

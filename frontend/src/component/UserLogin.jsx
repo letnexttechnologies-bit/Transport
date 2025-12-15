@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./userlogin.css";
+import { loginUser, registerUser } from "../api/api";
 
 export default function UserLogin() {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+  const [error, setError] = useState("");
+
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -13,67 +17,81 @@ export default function UserLogin() {
     password: "",
     confirmPassword: "",
   });
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // ---------------- REGISTER ----------------
+  // ================= REGISTER =================
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!formData.name || !formData.age || !formData.gender || !formData.phone ||
-      !formData.vehicleNumber || !formData.password || !formData.confirmPassword) {
+    const {
+      name,
+      age,
+      gender,
+      phone,
+      vehicleNumber,
+      password,
+      confirmPassword,
+    } = formData;
+
+    if (
+      !name ||
+      !age ||
+      !gender ||
+      !phone ||
+      !vehicleNumber ||
+      !password ||
+      !confirmPassword
+    ) {
       setError("All fields are required");
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
       return;
     }
 
-    const bodyData = {
-      name: formData.name,
-      age: Number(formData.age),
-      gender: formData.gender,
-      phone: formData.phone,
-      vehicleNumber: formData.vehicleNumber,
-      password: formData.password,
-    };
-
     try {
-      const response = await fetch("http://localhost:8080/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
+      const res = await registerUser({
+        name,
+        age: Number(age),
+        gender,
+        phone,
+        vehicleNumber,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Registration Successful! Please login now.");
-        setIsLogin(true);
-      } else {
-        setError(data.message || "Registration failed");
+      if (!res.success) {
+        setError(res.message || "Registration failed");
+        return;
       }
-    } catch (error) {
+
+      alert("✅ Registration successful! Please login.");
+      setIsLogin(true);
+      setFormData({
+        name: "",
+        age: "",
+        gender: "",
+        phone: "",
+        vehicleNumber: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (err) {
       setError("Network error. Please try again.");
     }
   };
 
-  // ---------------- LOGIN ----------------
+  // ================= LOGIN =================
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -83,31 +101,24 @@ export default function UserLogin() {
       return;
     }
 
-    const bodyData = {
-      phone: formData.phone,
-      password: formData.password,
-    };
-
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyData),
+      const res = await loginUser({
+        phone: formData.phone,
+        password: formData.password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        localStorage.setItem("currentUser", JSON.stringify(data.user));
-        localStorage.setItem("currentUserName", data.user.name);
-        localStorage.setItem("currentUserPhone", data.user.phone);
-        localStorage.setItem("currentUserVehicle", data.user.vehicle);
-
-        navigate(`/dashboard?userId=${data.user.id}&role=user`);
-      } else {
-        setError(data.message || "Invalid phone or password");
+      if (!res.success) {
+        setError(res.message || "Invalid phone or password");
+        return;
       }
-    } catch (error) {
+
+      // ✅ SAVE USER + TOKEN
+      localStorage.setItem("token", res.token);
+      localStorage.setItem("currentUser", JSON.stringify(res.user));
+
+      // ✅ FIX: MongoDB uses _id
+      navigate(`/dashboard?userId=${res.user._id}&role=user`);
+    } catch (err) {
       setError("Network error. Please try again.");
     }
   };
@@ -122,134 +133,136 @@ export default function UserLogin() {
         {error && <div className="error-message">{error}</div>}
 
         {isLogin ? (
+          // ================= LOGIN FORM =================
           <form onSubmit={handleLogin} className="user-login-form">
             <div className="form-group">
               <label>Phone Number *</label>
               <input
-                className="login-input"
                 type="tel"
+                className="login-input"
                 placeholder="Enter phone number"
                 value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                required
+                onChange={(e) =>
+                  handleInputChange("phone", e.target.value)
+                }
               />
             </div>
-
-            
 
             <div className="form-group">
               <label>Password *</label>
               <input
-                className="login-input"
                 type="password"
+                className="login-input"
                 placeholder="Enter password"
                 value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
-                required
+                onChange={(e) =>
+                  handleInputChange("password", e.target.value)
+                }
               />
             </div>
 
-            <button type="submit" className="login-btn user-btn">🔐 Login</button>
+            <button type="submit" className="login-btn user-btn">
+              🔐 Login
+            </button>
 
             <div className="auth-toggle">
               <p>Don't have an account?</p>
-              <button type="button" className="toggle-btn" onClick={() => setIsLogin(false)}>
+              <button
+                type="button"
+                className="toggle-btn"
+                onClick={() => setIsLogin(false)}
+              >
                 Create new account
               </button>
             </div>
           </form>
         ) : (
+          // ================= REGISTER FORM =================
           <form onSubmit={handleRegister} className="user-register-form">
             <div className="form-row">
-              <div className="form-group">
-                <label>Full Name *</label>
-                <input
-                  className="login-input"
-                  type="text"
-                  placeholder="Enter name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Age *</label>
-                <input
-                  className="login-input"
-                  type="number"
-                  placeholder="Age"
-                  value={formData.age}
-                  onChange={(e) => handleInputChange("age", e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Gender *</label>
-              <select
-                className="login-input"
-                value={formData.gender}
-                onChange={(e) => handleInputChange("gender", e.target.value)}
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Phone Number *</label>
               <input
                 className="login-input"
-                type="tel"
-                placeholder="Enter phone number"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
+                placeholder="Full Name"
+                value={formData.name}
+                onChange={(e) =>
+                  handleInputChange("name", e.target.value)
+                }
+              />
+              <input
+                className="login-input"
+                type="number"
+                placeholder="Age"
+                value={formData.age}
+                onChange={(e) =>
+                  handleInputChange("age", e.target.value)
+                }
               />
             </div>
 
-            <div className="form-group">
-              <label>Vehicle Number *</label>
-              <input
-                className="login-input"
-                type="text"
-                placeholder="Enter vehicle number"
-                value={formData.vehicleNumber}
-                onChange={(e) => handleInputChange("vehicleNumber", e.target.value)}
-              />
-            </div>
+            <select
+              className="login-input"
+              value={formData.gender}
+              onChange={(e) =>
+                handleInputChange("gender", e.target.value)
+              }
+            >
+              <option value="">Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+
+            <input
+              className="login-input"
+              placeholder="Phone Number"
+              value={formData.phone}
+              onChange={(e) =>
+                handleInputChange("phone", e.target.value)
+              }
+            />
+
+            <input
+              className="login-input"
+              placeholder="Vehicle Number"
+              value={formData.vehicleNumber}
+              onChange={(e) =>
+                handleInputChange("vehicleNumber", e.target.value)
+              }
+            />
 
             <div className="form-row">
-              <div className="form-group">
-                <label>Password *</label>
-                <input
-                  className="login-input"
-                  type="password"
-                  placeholder="Create password"
-                  value={formData.password}
-                  onChange={(e) => handleInputChange("password", e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Confirm Password *</label>
-                <input
-                  className="login-input"
-                  type="password"
-                  placeholder="Confirm password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                />
-              </div>
+              <input
+                className="login-input"
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) =>
+                  handleInputChange("password", e.target.value)
+                }
+              />
+              <input
+                className="login-input"
+                type="password"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
+              />
             </div>
 
-            <button type="submit" className="register-btn">📝 Register</button>
+            <button type="submit" className="register-btn">
+              📝 Register
+            </button>
 
             <div className="auth-toggle">
               <p>Already have an account?</p>
-              <button type="button" className="toggle-btn" onClick={() => setIsLogin(true)}>
-                Login to existing account
+              <button
+                type="button"
+                className="toggle-btn"
+                onClick={() => setIsLogin(true)}
+              >
+                Login
               </button>
             </div>
           </form>

@@ -1,13 +1,10 @@
 const express = require("express");
-const Notification = require("../models/Notification");
 const router = express.Router();
+const controller = require("../controllers/notificationController");
 
-router.get("/:userId", async (req, res) => {
-  const notifications = await Notification.find({
-    $or: [{ userId: req.params.userId }, { forAllUsers: true }],
-  });
-
-  res.json({ success: true, notifications });
-});
+router.post("/", controller.createNotification);
+router.get("/", controller.getNotifications);
+router.put("/:id/read", controller.markAsRead);
+router.delete("/", controller.clearAll);
 
 module.exports = router;

@@ -1,36 +1,44 @@
+require("dotenv").config();
 const express = require("express");
-const dotenv = require("dotenv");
+const cors = require("cors");
 const connectDB = require("./config/db");
 
-// routes
-const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
-const bookingRoutes = require("./routes/bookingRoutes");
+const userRoutes = require("./routes/userRoutes");
 const shipmentRoutes = require("./routes/shipmentRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
+const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
-
-dotenv.config();
-connectDB();
 
 const app = express();
 
-// 🔥 MUST HAVE middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+/* =========================
+   MIDDLEWARE
+========================= */
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
-// routes
-app.use("/api/users", userRoutes);
+app.use(cors());
+app.use(express.json());
+
+/* =========================
+   ROUTES
+========================= */
 app.use("/api/auth", authRoutes);
-app.use("/api/bookings", bookingRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/shipments", shipmentRoutes);
+app.use("/api/bookings", bookingRoutes);
+app.use("/api/admin-notifications", adminNotificationRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// health check (optional but useful)
-app.get("/", (req, res) => {
-  res.send("Transport API is running 🚀");
-});
+/* =========================
+   START SERVER
+========================= */
+connectDB();
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`🔥 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

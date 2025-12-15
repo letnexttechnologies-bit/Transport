@@ -1061,7 +1061,7 @@ const availableShipments = shipments
           <h1>Truck wala</h1>
           <p className="header-subtitle">
             User Dashboard
-            {userLocation && (
+            {/* {userLocation && (
               <span className="location-status-text">
                 <i className="fas fa-location-dot"></i> Location: {userLocationName}
                 {nearbyShipmentsCount > 0 && (
@@ -1070,7 +1070,7 @@ const availableShipments = shipments
                   </span>
                 )}
               </span>
-            )}
+            )} */}
           </p>
         </div>
         

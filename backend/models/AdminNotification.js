@@ -8,7 +8,7 @@ const adminNotificationSchema = new mongoose.Schema({
   read: { type: Boolean, default: false },
   shipmentId: String,
   bookingId: String,
-  timestamp: { type: Date, default: Date.now },
+  timestamp: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model("AdminNotification", adminNotificationSchema);
