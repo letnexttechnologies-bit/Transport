@@ -5,8 +5,6 @@ const connectDB = require("./config/db");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-const shipmentRoutes = require("./routes/shipmentRoutes");
-const bookingRoutes = require("./routes/bookingRoutes");
 const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 
@@ -46,8 +44,6 @@ app.use(express.json());
 ========================= */
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/shipments", shipmentRoutes);
-app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin-notifications", adminNotificationRoutes);
 app.use("/api/notifications", notificationRoutes);
 
