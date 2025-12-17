@@ -1,30 +1,42 @@
 const Notification = require("../models/Notification");
 
-/* GET USER NOTIFICATIONS */
-exports.getUserNotifications = async (req, res) => {
-  try {
-    const notifications = await Notification.find({
-      userId: req.params.userId
-    }).sort({ createdAt: -1 });
-
-    res.json(notifications);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch notifications" });
-  }
-};
-
-/* CREATE USER NOTIFICATION */
-exports.createUserNotification = async (req, res) => {
+// CREATE NOTIFICATION
+exports.createNotification = async (req, res) => {
   try {
     const notification = await Notification.create(req.body);
-    res.status(201).json(notification);
-  } catch (error) {
-    res.status(400).json({ message: "Notification creation failed" });
+    res.status(201).json({ success: true, data: notification });
+  } catch (err) {
+    res.status(400).json({ success: false, message: err.message });
   }
 };
 
-/* MARK AS READ */
+// GET USER / ADMIN NOTIFICATIONS
+exports.getNotifications = async (req, res) => {
+  try {
+    const { userId, role } = req.query;
+
+    const notifications = await Notification.find({ userId, role })
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, data: notifications });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// MARK AS READ
 exports.markAsRead = async (req, res) => {
-  await Notification.findByIdAndUpdate(req.params.id, { read: true });
-  res.json({ message: "Marked as read" });
+  try {
+    await Notification.findByIdAndUpdate(req.params.id, { read: true });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
+};
+
+// CLEAR ALL
+exports.clearAll = async (req, res) => {
+  const { userId, role } = req.query;
+  await Notification.deleteMany({ userId, role });
+  res.json({ success: true });
 };
