@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import "./user-dashboard.css";
+import { useTranslation } from 'react-i18next';
 
 // =========================
 // PUSH NOTIFICATION HANDLER
@@ -404,6 +405,7 @@ export default function UserDashboard() {
   const navigate = useNavigate();
   const role = searchParams.get("role") || "user";
 
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -1058,9 +1060,9 @@ const availableShipments = shipments
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-left">
-          <h1>Truck wala</h1>
+          <h1>{t('dashboard.title')}</h1>
           <p className="header-subtitle">
-            User Dashboard
+            {t('dashboard.userDashboard')}
             {/* {userLocation && (
               <span className="location-status-text">
                 <i className="fas fa-location-dot"></i> Location: {userLocationName}

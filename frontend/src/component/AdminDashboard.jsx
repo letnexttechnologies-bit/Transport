@@ -2,27 +2,43 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";  
 import "./dashboard.css";  
 import "./admin-dashboard.css";
+import { useTranslation } from 'react-i18next';
   
 export default function AdminDashboard() {  
   const [searchParams] = useSearchParams();  
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();  
   const role = searchParams.get("role");  
   const [showAddForm, setShowAddForm] = useState(false);  
   const [activeTab, setActiveTab] = useState("shipments");  
   const [searchTerm, setSearchTerm] = useState("");  
   const [adminNotes, setAdminNotes] = useState([]);  
-  const [showFilterOptions, setShowFilterOptions] = useState(false);  
+  const [showFilterOptions, setShowFilterOptions] = useState(false); 
+  
+    // ADD THIS STATE
+  const [currentLang, setCurrentLang] = useState(i18n.language || 'en');
   
   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");  
   const userId = currentUser.id || "admin";  
   const userName = currentUser.name || "Unknown User";  
   const userPhone = currentUser.phone || "No Phone";  
 
+    // Language change handler
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setCurrentLang(lng);
+    localStorage.setItem('preferred-language', lng);
+  };
 
+  // Initialize language from localStorage
+  useEffect(() => {
+    const savedLang = localStorage.getItem('preferred-language');
+    if (savedLang) {
+      i18n.changeLanguage(savedLang);
+      setCurrentLang(savedLang);
+    }
+  }, [i18n]);
 
-  
-
-  
   
   // Refs for scrolling  
   const bookingsSectionRef = useRef(null);  
@@ -85,7 +101,7 @@ useEffect(() => {
   
   const [newShipment, setNewShipment] = useState({  
     vehicleType: "",  
-    status: "Scheduled",  
+    status: "scheduled",  
     origin: "",  
     destination: "",  
     eta: "",  
@@ -129,17 +145,6 @@ useEffect(() => {
       setAdminNotes(saved);  
     }  
   }, [role, showNotifications]);  
-
-  useEffect(() => {
-  if (role !== "admin") return;
-
-  fetch(`http://localhost:8080/api/notifications?userId=admin&role=admin`)
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) setNotifications(data.data);
-    });
-}, [role]);
-
 
   useEffect(() => {
   if (showAddForm) document.body.classList.add("modal-open");
@@ -194,22 +199,6 @@ useEffect(() => {
     const interval = setInterval(checkPopupNotes, 5000);  
     return () => clearInterval(interval);  
   }, [role]);  
-
-
-  const addAdminNotification = async (message, type = "info") => {
-  await fetch("http://localhost:8080/api/notifications", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId: "admin",
-      role: "admin",
-      message,
-      type
-    })
-  });
-};
-
-
   
   // Load saved image  
   useEffect(() => {  
@@ -513,50 +502,67 @@ const handleBookingSubmit = () => {
     }));  
   };  
   
-const handleAddShipment = async (e) => {
-  e.preventDefault();
-
-  try {
-    const response = await fetch("http://localhost:8080/api/shipments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-  vehicleType: newShipment.vehicleType.trim(),
-  status: newShipment.status,
-  origin: newShipment.origin.trim(),
-  destination: newShipment.destination.trim(),
-  eta: newShipment.eta,
-  load: newShipment.load,
-  truck: newShipment.truck,
-  container: newShipment.container,
-  weight: newShipment.weight,
-  priority: newShipment.priority,
-  image: newShipment.image,
-  userId: "admin"
-      })
-    });
-
-    const result = await response.json();
-
-    if (!result.success) {
-      alert(result.message);
-      return;
-    }
-
-    // update UI with data from backend
-    setShipments(prev => [result.data, ...prev]);
-
-    alert("Shipment saved to MongoDB successfully ✅");
-    setShowAddForm(false);
-
-  } catch (error) {
-    console.error(error);
-    alert("Backend error");
-  }
-};
-
+  const handleAddShipment = (e) => {  
+    e.preventDefault();  
+  
+    const requiredFields = [  
+      { key: "vehicleType", label: "Vehicle Type" },  
+      { key: "origin", label: "Origin" },  
+      { key: "destination", label: "Destination" },  
+      { key: "eta", label: "ETA" },  
+      { key: "load", label: "Load Description" },  
+      { key: "truck", label: "Truck Type" },  
+      { key: "container", label: "Container" },  
+      { key: "weight", label: "Weight" }  
+    ];  
+  
+    for (let field of requiredFields) {  
+      if (!newShipment[field.key] || newShipment[field.key].trim() === "") {  
+        alert(`Please fill ${field.label}`);  
+        return;  
+      }  
+    }  
+  
+    const shipmentId = generateShipmentId();  
+    const shipmentWithImage = {  
+      ...newShipment,  
+      image: newShipment.image ||   
+        "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=200&fit=crop&auto=format"  
+    };  
+  
+    const shipmentWithId = {  
+      ...shipmentWithImage,  
+      id: shipmentId,  
+      userId: "admin",  
+      createdAt: new Date().toISOString()  
+    };  
+  
+    setShipments([...shipments, shipmentWithId]);  
+    setShowAddForm(false);  
+  
+    setNewShipment({  
+      vehicleType: "",  
+      status: "Scheduled",  
+      origin: "",  
+      destination: "",  
+      eta: "",  
+      load: "",  
+      truck: "",  
+      container: "",  
+      weight: "",  
+      priority: false,  
+      image: "",  
+      driver: {  
+        name: "",  
+        phone: "",  
+        license: "",  
+        vehicle: ""  
+      }  
+    });  
+  
+    localStorage.removeItem('shipmentImages');  
+    addNotification(`New shipment created successfully! Shipment ID: ${shipmentId}`, 'success');  
+  };  
   
   // Shipment actions  
   const handleDeleteShipment = (shipmentId) => {  
@@ -677,70 +683,92 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
       {/* Modern Header */}  
       <header className="dashboard-header">  
         <div className="header-left">  
-          <h1>Truck wala</h1>  
-          <p className="header-subtitle">Admin Dashboard</p>  
-        </div>  
-        <div className="header-actions">  
-          {/* Add New Shipment Button */}  
+          <h1>{t('dashboard.title')}</h1>  
+          <p className="header-subtitle">{t('dashboard.subtitle')}</p>  
+        </div>   
+        <div className="header-actions"> 
+          <div className="language-selector">
+            <select 
+              value={currentLang} 
+              onChange={(e) => changeLanguage(e.target.value)}
+              className="lang-select"
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                backgroundColor: 'white',
+                fontSize: '14px',
+                cursor: 'pointer',
+                marginRight: '15px'
+              }}
+            >
+              <option value="en">🇺🇸 English</option>
+              <option value="hi">🇮🇳 हिंदी</option>
+              <option value="ta">🇮🇳 தமிழ்</option>
+              <option value="te">🇮🇳 తెలుగు</option>
+            </select>
+          </div>
+ 
+           {/* Add New Shipment Button - UPDATED */}  
           {activeTab === 'shipments' && (  
             <button   
               className="btn btn-primary"  
               onClick={() => setShowAddForm(true)}  
             >  
               <i className="fas fa-plus"></i>  
-              + New Shipment  
+              {t('dashboard.newShipment')}
             </button>  
           )}  
   
-<div className="notification-badge" onClick={() => setShowNotifications(!showNotifications)}>
-  <div className="notification-symbol">
-    <img
-      src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
-      alt="notifications"
-      className="notification-image"
-    />
-    {unreadCount > 0 && (
-      <span className="notification-count">
-        {unreadCount > 99 ? '99+' : unreadCount}
-      </span>
-    )}
-  </div>
+             <div className="notification-badge" onClick={() => setShowNotifications(!showNotifications)}>
+              <div className="notification-symbol">
+                <img
+               src="https://cdn-icons-png.flaticon.com/512/3602/3602145.png"
+                 alt="notifications"
+                 className="notification-image"
+                />
+               {unreadCount > 0 && (
+               <span className="notification-count">
+                {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
+          </div>
 
-  {showNotifications && (
-    <div className="notification-dropdowns">
-      <div className="notification-headers">
-        <h4>Notifications</h4>
-        {notifications.length > 0 && (
-          <button className="clear-all-btn" onClick={() => setNotifications([])}>
-            Clear All
-          </button>
-        )}
-      </div>
+         {showNotifications && (
+              <div className="notification-dropdowns">
+                <div className="notification-headers">
+                  <h4>{t('notifications.title')}</h4>
+                  {notifications.length > 0 && (
+                    <button className="clear-all-btn" onClick={() => setNotifications([])}>
+                      {t('notifications.clearAll')}
+                    </button>
+                  )}
+                </div>
 
-      {notifications.length === 0 ? (
-        <div className="no-notifications">No new notifications</div>
-      ) : (
-        <div className="notifications-list">
-          {notifications.slice(0, 8).map((notif) => (
-            <div
-              key={notification._id}
-              className={`notification-item ${notif.read ? 'read' : 'unread'} ${notif.type}`}
-              onClick={() => markAsRead(notif.id)}
-            >
-              <div className="notification-message">{notif.message}</div>
-              <div className="notification-time">
-                {new Date(notif.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {notifications.length === 0 ? (
+                  <div className="no-notifications">{t('notifications.noNotifications')}</div>
+                ) : (
+                  <div className="notifications-list">
+                    {notifications.slice(0, 8).map((notif) => (
+                      <div
+                        key={notif.id}
+                        className={`notification-item ${notif.read ? 'read' : 'unread'} ${notif.type}`}
+                        onClick={() => markAsRead(notif.id)}
+                      >
+                        <div className="notification-message">{notif.message}</div>
+                        <div className="notification-time">
+                          {new Date(notif.timestamp).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )}
-</div>
+            )}
+          </div>
 
   
            <div className="user-profile">  
@@ -752,62 +780,64 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
               <div className="user-role">{role}</div>  
             </div>  
             <i className="fas fa-chevron-down"></i>  
-           </div>  
-           <button   
+          </div>  
+          
+          <button   
             onClick={() => navigate("/")}   
             className="btn btn-secondarys logout-btn"  
-           >  
+          >  
             <img   
               src="https://cdn-icons-png.flaticon.com/512/126/126467.png"  
               alt="logout icon"  
               className="logout-icon"  
             />  
-            Logout  
-           </button>  
-           </div>  
-          </header>  
+            {t('dashboard.logout')}
+          </button>  
+        </div>  
+      </header>  
+  
   
        {/* Statistics Section */}  
        <div className="statistics-grid">  
         <div className="stat-card total" onClick={scrollToShipmentsSection}>  
           <div className="stat-header">  
-            <div className="stat-title">Total Shipments</div>  
+            <div className="stat-title">{t('stats.totalShipments')}</div>  
             <div className="stat-trend trend-up">  
               <i className="fas fa-arrow-up"></i>  
             </div>  
           </div>  
           <div className="stat-value">{totalShipments}</div>  
-          <div className="stat-subtitle">Across all locations</div>  
+          <div className="stat-subtitle">{t('stats.acrossAllLocations')}</div>  
         </div>  
         <div className="stat-card active" onClick={scrollToShipmentsSection}>  
           <div className="stat-header">  
-            <div className="stat-title">Active Shipments</div>  
+            <div className="stat-title">{t('stats.activeShipments')}</div>  
             <div className="stat-trend trend-up">  
               <i className="fas fa-arrow-up"></i>  
             </div>  
           </div>  
           <div className="stat-value">{activeShipments}</div>  
-          <div className="stat-subtitle">Currently active</div>  
+          <div className="stat-subtitle">{t('stats.currentlyActive')}</div>  
         </div>  
         <div className="stat-card transit" onClick={scrollToShipmentsSection}>  
           <div className="stat-header">  
-            <div className="stat-title">In Transit</div>  
+            <div className="stat-title">{t('stats.inTransit')}</div>  
             <div className="stat-trend trend-up">  
               <i className="fas fa-arrow-up"></i>  
             </div>  
           </div>  
           <div className="stat-value">{inTransitCount}</div>  
-          <div className="stat-subtitle">On the move</div>  
+          <div className="stat-subtitle">{t('stats.onTheMove')}</div>  
         </div>  
         <div className="stat-card delivered" onClick={scrollToBookingsSection}>  
           <div className="stat-header">  
-            <div className="stat-title">Pending Bookings</div>  
+            <div className="stat-title">{t('stats.pendingBookings')}</div>  
             <div className="stat-trend trend-up">  
               <i className="fas fa-arrow-up"></i>  
             </div>  
           </div>  
           <div className="stat-value">{pendingBookingsForNotification}</div>  
-          <div className="stat-subtitle">Need approval</div>  
+          <div className="stat-subtitle">{t('stats.needApproval')}</div>  
         </div>  
        </div>  
   
@@ -818,7 +848,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
           <input   
             type="text"   
             className="search-bar"   
-            placeholder="Search shipment ID, origin, destination..."  
+            placeholder={t('dashboard.searchPlaceholder')} 
             value={searchTerm}  
             onChange={(e) => setSearchTerm(e.target.value)}  
           />  
@@ -849,46 +879,46 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
         </div>  
        </div>  
   
-      {/* Admin Tabs */}  
+      {/* Tabs - UPDATED */}  
       <div className="dashboard-tabs">  
         <button   
           className={`tab-btn ${activeTab === 'shipments' ? 'active' : ''}`}  
           onClick={() => setActiveTab('shipments')}  
         >  
-          Shipments  
+          {t('tabs.shipments')}
           <span className="tab-count">{shipments.length}</span>  
         </button>  
         <button   
           className={`tab-btn ${activeTab === 'bookings' ? 'active' : ''}`}  
           onClick={() => setActiveTab('bookings')}  
         >  
-          Bookings  
+          {t('tabs.bookings')}
           <span className="tab-count">{bookings.length}</span>  
         </button>  
-      </div>  
+      </div> 
   
-      {/* Add Shipment Form */}  
+      {/* Add Shipment Form - UPDATE FORM TITLES */}  
       {showAddForm && (  
         <div className="form-overlay">  
           <div className="form-container">  
             <div className="form-header">  
               <button className="back-btn" onClick={() => setShowAddForm(false)}>  
                 <i className="fas fa-arrow-left"></i>  
-                Back  
+                {t('form.back')}
               </button>  
-              <h2>Add New Shipment</h2>  
+              <h2>{t('form.addNewShipment')}</h2>  
               <div className="form-header-info">  
                 <span className="shipment-id-preview">ID: {generateShipmentId()}</span>  
                 <button className="save-btn" onClick={handleAddShipment}>  
                   <i className="fas fa-save"></i>  
-                  Save Shipment  
+                  {t('form.saveShipment')}
                 </button>  
               </div>  
             </div>  
-  
+
             <form className="shipment-form">  
               <div className="form-section">  
-                <h3>Shipment Image</h3>  
+                <h3>{t('form.shipmentImage')}</h3>
                 <div   
                   className={`image-upload-section ${isDragOver ? 'drag-over' : ''}`}  
                   onDragOver={handleDragOver}  
@@ -899,7 +929,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                   <div className="image-preview">  
                     {newShipment.image ? (  
                       <div className="image-with-actions">  
-                        <img src={newShipment.image} alt="Preview" />  
+                        <img src={newShipment.image} alt={t('form.imagePreviewAlt')} />  
                         <button   
                           type="button"  
                           className="remove-image-btn"  
@@ -907,7 +937,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                             e.stopPropagation();  
                             handleRemoveImage();  
                           }}  
-                          title="Remove image"  
+                          title={t('form.removeImage')}  
                         >  
                           ×  
                         </button>  
@@ -917,8 +947,8 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                         <div className="upload-icon">  
                           <i className="fas fa-cloud-upload-alt"></i>  
                         </div>  
-                        <span>Drag & Drop or Click to Upload</span>  
-                        <small>Supports: JPEG, PNG, GIF (Max 5MB)</small>  
+                        <span>{t('form.dragDropOrClick')}</span>  
+                        <small>{t('form.supportedFormats')}</small>  
                       </div>  
                     )}  
                   </div>  
@@ -942,7 +972,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                         }}  
                       >  
                         <i className="fas fa-folder-open"></i>  
-                        Browse Files  
+                        {t('form.browseFiles')} 
                       </button>  
                     )}  
                   </div>  
@@ -950,42 +980,44 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
               </div>  
   
               <div className="form-section">  
-                <h3>Shipment Information</h3>  
+                <h3>{t('form.shipmentInformation')}</h3>  
                   
                 <div className="form-group">  
-                  <label>Vehicle Type *</label>  
+                  <label>{t('form.vehicleType')}*</label>  
                   <input  
                     type="text"  
                     value={newShipment.vehicleType}  
                     onChange={(e) => handleInputChange("vehicleType", e.target.value)}  
-                    placeholder="Heavy Machinery Transport"  
+                    placeholder={t('form.vehicleTypePlaceholder')}
+  
                     required  
                   />  
                 </div>  
   
                 <div className="form-group">  
-                  <label>Status</label>  
+                  <label>{t('form.status')}</label>  
                   <select   
                     value={newShipment.status}  
                     onChange={(e) => handleInputChange("status", e.target.value)}  
                   >  
-                    <option value="Scheduled">Scheduled</option>  
-                    <option value="In Transit">In Transit</option>  
-                    <option value="At Warehouse">At Warehouse</option>  
-                    <option value="Delivered">Delivered</option>  
+                    <option value="Scheduled">{t('form.statusScheduled')}</option>  
+                    <option value="In Transit">{t('form.statusInTransit')}</option>  
+                    <option value="At Warehouse">{t('form.statusAtWarehouse')}</option>  
+                    <option value="Delivered">{t('form.statusDelivered')}</option>  
                   </select>  
                 </div>  
   
                 <div className="form-row">  
                   <div className="form-group">  
-                    <label className="required">Origin *</label>  
+                    <label className="required">{t('form.origin')} *</label>  
                     <div className="input-container">  
                       <input  
                         type="text"  
                         value={newShipment.origin}  
                         onChange={(e) => handleOriginChange(e.target.value)}  
                         onFocus={() => setShowOriginSuggestions(true)}  
-                        placeholder="Type or select from suggestions"  
+                        placeholder={t('form.originPlaceholder')}
+  
                         required  
                       />  
                       {showOriginSuggestions && filteredOriginSuggestions.length > 0 && (  
@@ -1005,14 +1037,14 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                   </div>  
   
                   <div className="form-group">  
-                    <label className="required">Destination *</label>  
+                    <label className="required">{t('form.destination')} *</label>  
                     <div className="input-container">  
                       <input  
                         type="text"  
                         value={newShipment.destination}  
                         onChange={(e) => handleDestinationChange(e.target.value)}  
                         onFocus={() => setShowDestinationSuggestions(true)}  
-                        placeholder="Type or select from suggestions"  
+                        placeholder={t('form.destinationPlaceholder')}  
                         required  
                       />  
                       {showDestinationSuggestions && filteredDestinationSuggestions.length > 0 && (  
@@ -1033,61 +1065,60 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                 </div>  
   
                 <div className="form-group">  
-                  <label>ETA</label>  
+                  <label>{t('form.eta')}</label>  
                   <input  
                     type="text"  
                     value={newShipment.eta}  
                     onChange={(e) => handleInputChange("eta", e.target.value)}  
-                    placeholder="2 days"  
+                    placeholder={t('form.etaPlaceholder')} 
                     required  
                   />  
                 </div>  
   
                 <div className="form-group">  
-                  <label>Load Description</label>  
+                  <label>{t('form.loadDescription')}</label>  
                   <input  
                     type="text"  
                     value={newShipment.load}  
                     onChange={(e) => handleInputChange("load", e.target.value)}  
-                    placeholder="Construction Equipment"  
+                    placeholder={t('form.loadPlaceholder')}  
                     required  
                   />  
                 </div>  
   
                 <div className="form-row">  
                   <div className="form-group">  
-                    <label>Truck Type</label>  
+                    <label>{t('form.truckType')}</label>  
                     <input  
                       type="text"  
                       value={newShipment.truck}  
                       onChange={(e) => handleInputChange("truck", e.target.value)}  
-                      placeholder="Freightliner Cascadia"  
+                      placeholder={t('form.truckPlaceholder')} 
                       required  
                     />  
                   </div>  
   
                   <div className="form-group">  
-                    <label>Container</label>  
+                    <label>{t('form.container')}</label>  
                     <input  
                       type="text"  
                       value={newShipment.container}  
                       onChange={(e) => handleInputChange("container", e.target.value)}  
-                      placeholder="40ft Flatbed"  
+                      placeholder={t('form.containerPlaceholder')}
                       required  
                     />  
                   </div>  
                 </div>  
   
-                <div className="form-group">  
-                  <label>Weight</label>  
-                  <input  
-                    type="text"  
-                    value={newShipment.weight}  
-                    onChange={(e) => handleInputChange("weight", e.target.value)}  
-                    placeholder="20,000 kg"  
-                    required  
-                  />  
-                </div>  
+                   <div className="form-group">
+                 <label>{t('form.weight')}</label>
+                   <input
+                    type="text"
+                    value={newShipment.weight}
+                    onChange={(e) => handleInputChange("weight", e.target.value)}
+                    placeholder={t('form.weightPlaceholder')}
+                    required/>
+                 </div>  
   
                 <div className="form-group checkbox-group">  
                   <label>  
@@ -1096,7 +1127,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                       checked={newShipment.priority}  
                       onChange={(e) => handleInputChange("priority", e.target.checked)}  
                     />  
-                    Priority Shipment  
+                    {t('form.priorityShipment')}  
                   </label>  
                 </div>  
               </div>  
@@ -1105,24 +1136,25 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
         </div>  
       )}  
   
-      {/* Shipments Section */}  
+      {/* Shipments Section - UPDATE SECTION TITLE */}  
       {activeTab === 'shipments' && (  
         <div className="shipments-section" ref={shipmentsSectionRef}>  
           <div className="section-header">  
             <h2 className="section-title">  
-              All Shipments ({sortedShipments.length})  
+              {t('shipments.allShipments')} ({sortedShipments.length})  
             </h2>  
             <div className="section-actions">  
               <button className="btn btn-secondary">  
                 <i className="fas fa-sync-alt"></i>  
-                Refresh  
+                {t('shipments.refresh')}
               </button>  
             </div>  
           </div>  
             
           {sortedShipments.length === 0 ? (  
             <div className="empty-state">  
-              <p>No shipments found. Create your first shipment to get started!</p>  
+                            <p>{t('shipments.noShipments')}</p>  
+ 
             </div>  
           ) : (  
             <div className="shipments-grid">  
@@ -1140,7 +1172,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                     
                   {shipment.priority && (  
                     <div className="priority-flag priority-high">  
-                      High Priority  
+                      {t('shipments.highPriority')} 
                     </div>  
                   )}  
                     
@@ -1157,21 +1189,21 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                   <div className="shipment-content">  
                     <div className="route-info">  
                       <div className="origin">  
-                        <div className="location-label">Origin</div>  
+                        <div className="location-label">{t('shipments.origin')}</div>  
                         <div className="location-value">{shipment.origin}</div>  
                       </div>  
                       <div className="route-arrow">  
                         <i className="fas fa-arrow-right"></i>  
                       </div>  
                       <div className="destination">  
-                        <div className="location-label">Destination</div>  
+                        <div className="location-label">{t('shipments.destination')}</div>  
                         <div className="location-value">{shipment.destination}</div>  
                       </div>  
                     </div>  
                       
                     <div className="progress-section">  
                       <div className="progress-header">  
-                        <div className="progress-label">Delivery Progress</div>  
+                        <div className="progress-label">{t('shipments.deliveryProgress')}</div>  
                         <div className="progress-value">{getProgressPercentage(shipment.status)}%</div>  
                       </div>  
                       <div className="progress-bar">  
@@ -1184,19 +1216,19 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                       
                     <div className="shipment-details">  
                       <div className="detail-item">  
-                        <div className="detail-label">Items</div>  
+                        <div className="detail-label">{t('shipments.items')}</div>  
                         <div className="detail-value">{shipment.load || 'N/A'}</div>  
                       </div>  
                       <div className="detail-item">  
-                        <div className="detail-label">Weight</div>  
+                        <div className="detail-label">{t('shipments.weight')}</div>  
                         <div className="detail-value">{shipment.weight || 'N/A'}</div>  
                       </div>  
                       <div className="detail-item">  
-                        <div className="detail-label">Vehicle</div>  
+                        <div className="detail-label">{t('shipments.vehicle')}</div>  
                         <div className="detail-value">{shipment.truck || 'N/A'}</div>  
                       </div>  
                       <div className="detail-item">  
-                        <div className="detail-label">ETA</div>  
+                        <div className="detail-label">{t('shipments.eta')}</div>  
                         <div className="detail-value">{shipment.eta || 'N/A'}</div>  
                       </div>  
                     </div>  
@@ -1224,7 +1256,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                         onClick={() => handleViewDetails(shipment.id)}  
                       >  
                         <i className="fas fa-info-circle"></i>  
-                        Details  
+                        {t('shipments.details')}  
                       </button>  
                         
                       <button   
@@ -1232,19 +1264,19 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                         onClick={() => handleEditShipment(shipment.id)}  
                       >  
                         <i className="fas fa-edit"></i>  
-                        Edit  
+                        {t('shipments.edit')} 
                       </button>  
                       <button   
                         className="action-btn danger"  
                         onClick={() => handleDeleteShipment(shipment.id)}  
                       >  
                         <i className="fas fa-trash"></i>  
-                        Delete  
+                        {t('shipments.delete')}  
                       </button>  
                     </div>  
                       
                     <div className="update-time">  
-                      Created: {formatDate(shipment.createdAt)}  
+                      {t('shipments.created')}: {formatDate(shipment.createdAt)}  
                     </div>  
                   </div>  
                 </div>  
@@ -1254,16 +1286,16 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
         </div>  
       )}  
   
-      {/* Bookings Section */}  
+        {/* Bookings Section */}  
       {activeTab === 'bookings' && (  
         <div className="bookings-section" ref={bookingsSectionRef}>  
           <div className="section-header">  
-            <h2 className="section-title">All Bookings ({bookings.length})</h2>  
+            <h2 className="section-title">{t('bookings.allBookings')} ({bookings.length})</h2>  
           </div>  
             
           {bookings.length === 0 ? (  
             <div className="empty-state">  
-              <p>No bookings found yet.</p>  
+              <p>{t('bookings.noBookings')}</p>  
             </div>  
           ) : (  
             <div className="bookings-grid">  

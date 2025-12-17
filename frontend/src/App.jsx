@@ -14,7 +14,7 @@ import ContactSupport from "./component/ContactSupport";
 import EmailReport from "./component/EmailReport";
 import PrintDetails from "./component/PrintDetails";
 import ReportIssue from "./component/ReportIssue";
-
+import './i18n/config'; // Import i18n config
 
 function App() {
   return (

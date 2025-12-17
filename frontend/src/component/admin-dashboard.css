@@ -935,3 +935,54 @@ body.modal-open {
   }
 }
 
+/* Language Selector */
+.language-selector {
+  margin-right: 15px;
+}
+
+.lang-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+.lang-select:focus {
+  outline: none;
+  border-color: #4a6cf7;
+}
+
+/* Update notification styles for RTL support */
+[dir="rtl"] .notification-dropdowns {
+  right: auto;
+  left: 0;
+}
+
+/* Language Selector */
+.language-selector {
+  margin-right: 15px;
+}
+
+.lang-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 140px;
+  transition: all 0.3s ease;
+}
+
+.lang-select:hover {
+  border-color: #4a6cf7;
+}
+
+.lang-select:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
