@@ -21,13 +21,12 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // Postman support
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not allowed for this origin"));
+      callback(new Error("CORS not allowed"));
     }
   },
   credentials: true,
@@ -35,16 +34,15 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-
-app.use(cors());
-app.use(express.json());
-
-connectDB();
-
 /* =========================
    MIDDLEWARE
 ========================= */
 app.use(express.json());
+
+/* =========================
+   DATABASE
+========================= */
+connectDB();
 
 /* =========================
    ROUTES
@@ -55,13 +53,10 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/shipments", shipmentRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-
 /* =========================
    START SERVER
 ========================= */
-connectDB();
-
-const PORT = process.env.PORT || 8080;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

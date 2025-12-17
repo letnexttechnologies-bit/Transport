@@ -3,7 +3,10 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import "./dashboard.css";  
 import "./admin-dashboard.css";
 import { useTranslation } from 'react-i18next';
-const API_URL = import.meta.env.VITE_API_URL;
+
+
+const API_URL = import.meta.env.VITE_BASE_URL;
+
 
   
 export default function AdminDashboard() {  
