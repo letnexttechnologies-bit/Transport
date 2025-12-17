@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import "./dashboard.css";  
 import "./admin-dashboard.css";
 import { useTranslation } from 'react-i18next';
+const API_URL = import.meta.env.VITE_API_URL;
+
   
 export default function AdminDashboard() {  
   const [searchParams] = useSearchParams();  
@@ -54,16 +56,31 @@ export default function AdminDashboard() {
     "Goa", "Gujarat", "Haryana"  
   ];  
   
-  // Load shipments and bookings from localStorage  
-  const [shipments, setShipments] = useState(() => {  
-    const savedShipments = localStorage.getItem('shipments');  
-    return savedShipments ? JSON.parse(savedShipments) : [];  
-  });  
-  
-  const [bookings, setBookings] = useState(() => {  
-    const savedBookings = localStorage.getItem('bookings');  
-    return savedBookings ? JSON.parse(savedBookings) : [];  
-  });  
+  // Load shipments and bookings 
+
+const [shipments, setShipments] = useState([]);
+const [bookings, setBookings] = useState([]);
+
+// ===============================
+// LOAD SHIPMENTS & BOOKINGS (API)
+// ===============================
+useEffect(() => {
+  const loadData = async () => {
+    try {
+      const shipmentRes = await fetch(`${API_URL}/api/shipments`);
+      const shipmentData = await shipmentRes.json();
+      setShipments(shipmentData);
+
+      const bookingRes = await fetch(`${API_URL}/api/bookings`);
+      const bookingData = await bookingRes.json();
+      setBookings(bookingData);
+    } catch (err) {
+      console.error("Failed to load data", err);
+    }
+  };
+
+  loadData();
+}, []);
 
 
   // ----------------------------
@@ -128,15 +145,7 @@ useEffect(() => {
   // Drag and drop state  
   const [isDragOver, setIsDragOver] = useState(false);  
   const fileInputRef = useRef(null);  
-  
-  // Save to localStorage effects  
-  useEffect(() => {  
-    localStorage.setItem('shipments', JSON.stringify(shipments));  
-  }, [shipments]);  
-  
-  useEffect(() => {  
-    localStorage.setItem('bookings', JSON.stringify(bookings));  
-  }, [bookings]);  
+ 
   
   // Load admin notes on mount  
   useEffect(() => {  
@@ -502,83 +511,75 @@ const handleBookingSubmit = () => {
     }));  
   };  
   
-  const handleAddShipment = (e) => {  
-    e.preventDefault();  
-  
-    const requiredFields = [  
-      { key: "vehicleType", label: "Vehicle Type" },  
-      { key: "origin", label: "Origin" },  
-      { key: "destination", label: "Destination" },  
-      { key: "eta", label: "ETA" },  
-      { key: "load", label: "Load Description" },  
-      { key: "truck", label: "Truck Type" },  
-      { key: "container", label: "Container" },  
-      { key: "weight", label: "Weight" }  
-    ];  
-  
-    for (let field of requiredFields) {  
-      if (!newShipment[field.key] || newShipment[field.key].trim() === "") {  
-        alert(`Please fill ${field.label}`);  
-        return;  
-      }  
-    }  
-  
-    const shipmentId = generateShipmentId();  
-    const shipmentWithImage = {  
-      ...newShipment,  
-      image: newShipment.image ||   
-        "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=400&h=200&fit=crop&auto=format"  
-    };  
-  
-    const shipmentWithId = {  
-      ...shipmentWithImage,  
-      id: shipmentId,  
-      userId: "admin",  
-      createdAt: new Date().toISOString()  
-    };  
-  
-    setShipments([...shipments, shipmentWithId]);  
-    setShowAddForm(false);  
-  
-    setNewShipment({  
-      vehicleType: "",  
-      status: "Scheduled",  
-      origin: "",  
-      destination: "",  
-      eta: "",  
-      load: "",  
-      truck: "",  
-      container: "",  
-      weight: "",  
-      priority: false,  
-      image: "",  
-      driver: {  
-        name: "",  
-        phone: "",  
-        license: "",  
-        vehicle: ""  
-      }  
-    });  
-  
-    localStorage.removeItem('shipmentImages');  
-    addNotification(`New shipment created successfully! Shipment ID: ${shipmentId}`, 'success');  
-  };  
+const handleAddShipment = async (e) => {
+  e.preventDefault();
+
+  const shipmentId = generateShipmentId();
+
+  const shipmentPayload = {
+    shipmentId,
+    ...newShipment,
+    status: newShipment.status || "Scheduled",
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    const res = await fetch(`${API_URL}/api/shipments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(shipmentPayload)
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to create shipment");
+    }
+
+    const savedShipment = await res.json();
+
+    setShipments(prev => [savedShipment, ...prev]);
+    setShowAddForm(false);
+
+    addNotification(`Shipment ${shipmentId} created successfully`, "success");
+  } catch (err) {
+    console.error("Shipment save failed:", err);
+    alert("Failed to save shipment");
+  }
+};
+
   
   // Shipment actions  
-  const handleDeleteShipment = (shipmentId) => {  
-    if (window.confirm("Are you sure you want to delete this shipment?")) {  
-      setShipments(shipments.filter(shipment => shipment.id !== shipmentId));  
-      addNotification(`Shipment ${shipmentId} deleted successfully`, 'info');  
-    }  
-  };  
+
+const handleDeleteShipment = async (mongoId) => {
+  if (!window.confirm("Delete this shipment?")) return;
+
+  try {
+    await fetch(`${API_URL}/api/shipments/${mongoId}`, {
+      method: "DELETE"
+    });
+
+    setShipments(prev => prev.filter(s => s._id !== mongoId));
+    addNotification("Shipment deleted successfully", "info");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete shipment");
+  }
+};
+
+  // const handleDeleteShipment = (shipmentId) => {  
+  //   if (window.confirm("Are you sure you want to delete this shipment?")) {  
+  //     setShipments(shipments.filter(shipment => shipment.id !== shipmentId));  
+  //     addNotification(`Shipment ${shipmentId} deleted successfully`, 'info');  
+  //   }  
+  // };  
   
-  const handleEditShipment = (shipmentId) => {  
-    navigate(`/edit-shipment/${shipmentId}?userId=${userId}&role=${role}`);  
-  };  
+  // const handleEditShipment = (shipmentId) => {  
+  //   navigate(`/edit-shipment/${shipmentId}?userId=${userId}&role=${role}`);  
+  // };  
   
-  const handleViewDetails = (shipmentId) => {  
-    navigate(`/shipment-details/${shipmentId}?userId=${userId}&role=${role}`);  
-  };  
+  // const handleViewDetails = (shipmentId) => {  
+  //   navigate(`/shipment-details/${shipmentId}?userId=${userId}&role=${role}`);  
+  // };  
   
   // Booking actions  
 const handleUpdateBookingStatus = (bookingId, newStatus) => {
@@ -1159,7 +1160,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
           ) : (  
             <div className="shipments-grid">  
               {sortedShipments.map(shipment => (  
-                <div key={shipment.id} className="shipment-card">  
+                <div key={shipment._id} className="shipment-card">  
                   <div className="shipment-header">  
                     <div>  
                       <div className="shipment-id">{shipment.id}</div>  
@@ -1300,7 +1301,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
           ) : (  
             <div className="bookings-grid">  
               {bookings.map(booking => (  
-                <div key={booking.id} className={`booking-card status-${booking.status.toLowerCase()}`}>  
+                <div key={booking._id} className={`booking-card status-${booking.status.toLowerCase()}`}>  
                   <div className="booking-header">  
                     <h3>Booking #{booking.id}</h3>  
                     <span className={`status-badge ${getStatusClass(booking.status)}`}>  

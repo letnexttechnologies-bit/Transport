@@ -3,10 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminNotificationRoutes = require("./routes/adminNotificationRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const shipmentRoutes = require("./routes/shipmentRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 const app = express();
 
@@ -34,6 +35,12 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+
+app.use(cors());
+app.use(express.json());
+
+connectDB();
+
 /* =========================
    MIDDLEWARE
 ========================= */
@@ -42,10 +49,12 @@ app.use(express.json());
 /* =========================
    ROUTES
 ========================= */
-app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin-notifications", adminNotificationRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/shipments", shipmentRoutes);
+app.use("/api/bookings", bookingRoutes);
+
 
 /* =========================
    START SERVER
