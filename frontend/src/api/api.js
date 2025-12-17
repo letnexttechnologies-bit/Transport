@@ -11,7 +11,7 @@ export const registerUser = async (formData) => {
       headers: {
         "Content-Type": "application/json"
       },
-      credentials: "include", // ✅ IMPORTANT
+      credentials: "include", // IMPORTANT
       body: JSON.stringify(formData)
     });
 
@@ -51,7 +51,7 @@ export const loginUser = async (formData) => {
       headers: {
         "Content-Type": "application/json"
       },
-      credentials: "include", // ✅ IMPORTANT
+      credentials: "include", // IMPORTANT
       body: JSON.stringify(formData)
     });
 
@@ -85,5 +85,37 @@ export const loginUser = async (formData) => {
       success: false,
       message: "Network error. Please try again."
     };
+  }
+};
+
+/* =========================
+   USER NOTIFICATIONS
+========================= */
+export const getUserNotifications = async (userId) => {
+  try {
+    const res = await fetch(`${API_URL}/notifications/${userId}`, {
+      credentials: "include"
+    });
+
+    return await res.json();
+  } catch (error) {
+    console.error("User notifications error:", error);
+    return [];
+  }
+};
+
+/* =========================
+   ADMIN NOTIFICATIONS
+========================= */
+export const getAdminNotifications = async () => {
+  try {
+    const res = await fetch(`${API_URL}/admin-notifications`, {
+      credentials: "include"
+    });
+
+    return await res.json();
+  } catch (error) {
+    console.error("Admin notifications error:", error);
+    return [];
   }
 };
