@@ -1,9 +1,16 @@
-const express = require("express");
+import express from "express";
+import {
+  getAllShipments,
+  getShipmentById,
+  updateShipment,
+  deleteShipment
+} from "../controllers/shipmentController.js";
+
 const router = express.Router();
-const controller = require("../controllers/shipmentController");
 
-router.post("/", controller.createShipment);
-router.get("/", controller.getShipments);
-router.delete("/:id", controller.deleteShipment);
+router.get("/", getAllShipments);
+router.get("/:id", getShipmentById);
+router.put("/:id", updateShipment);
+router.delete("/:id", deleteShipment);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+// Notification.js
+import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true },   // admin or userId
+    userId: { type: String, required: true }, // admin or userId
     role: { type: String, enum: ["admin", "user"], required: true },
 
     title: { type: String },
@@ -19,4 +20,6 @@ const notificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Notification", notificationSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
+
+export default Notification; // ✅ default export for ESM

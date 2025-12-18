@@ -1,42 +1,51 @@
-const Notification = require("../models/Notification");
+// notificationController.js
+import Notification from "../models/Notification.js"; // .js extension required
 
-// CREATE NOTIFICATION
-exports.createNotification = async (req, res) => {
+// CREATE
+export const createNotification = async (req, res) => {
   try {
-    const notification = await Notification.create(req.body);
-    res.status(201).json({ success: true, data: notification });
+    const notification = new Notification(req.body);
+    await notification.save();
+    res.status(201).json(notification);
   } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
-// GET USER / ADMIN NOTIFICATIONS
-exports.getNotifications = async (req, res) => {
+// READ
+export const getNotifications = async (req, res) => {
   try {
-    const { userId, role } = req.query;
-
-    const notifications = await Notification.find({ userId, role })
-      .sort({ createdAt: -1 });
-
-    res.json({ success: true, data: notifications });
+    const notifications = await Notification.find().sort({ createdAt: -1 });
+    res.json(notifications);
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
-// MARK AS READ
-exports.markAsRead = async (req, res) => {
+// UPDATE
+export const updateNotification = async (req, res) => {
   try {
-    await Notification.findByIdAndUpdate(req.params.id, { read: true });
+    const notification = await Notification.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!notification)
+      return res.status(404).json({ message: "Notification not found" });
+    res.json(notification);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// DELETE
+export const deleteNotification = async (req, res) => {
+  try {
+    const notification = await Notification.findByIdAndDelete(req.params.id);
+    if (!notification)
+      return res.status(404).json({ message: "Notification not found" });
     res.json({ success: true });
   } catch (err) {
-    res.status(400).json({ success: false });
+    res.status(500).json({ message: err.message });
   }
-};
-
-// CLEAR ALL
-exports.clearAll = async (req, res) => {
-  const { userId, role } = req.query;
-  await Notification.deleteMany({ userId, role });
-  res.json({ success: true });
 };

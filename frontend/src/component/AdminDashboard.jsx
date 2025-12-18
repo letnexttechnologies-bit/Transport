@@ -138,6 +138,28 @@ useEffect(() => {
     }  
   });  
   
+const openAddForm = () => {
+  const newId = `SH${Date.now()}`; // unique ID based on timestamp
+  setNewShipment({
+    ...newShipment,
+    shipmentId: newId, // assign new unique ID
+    vehicleType: "",
+    status: "scheduled",
+    origin: "",
+    destination: "",
+    eta: "",
+    load: "",
+    truck: "",
+    container: "",
+    weight: "",
+    priority: false,
+    image: "",
+    driver: { name: "", phone: "", license: "", vehicle: "" }
+  });
+  setShowAddForm(true);
+};
+
+
   // State for suggestions dropdown  
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);  
   const [showDestinationSuggestions, setShowDestinationSuggestions] = useState(false);  
@@ -305,21 +327,18 @@ useEffect(() => {
   };  
   
   // Generate unique shipment ID  
-  const generateShipmentId = () => {  
-    const savedShipments = localStorage.getItem('shipments');  
-    let lastId = 1000;  
-      
-    if (savedShipments) {  
-      const allShipments = JSON.parse(savedShipments);  
-      if (allShipments.length > 0) {  
-        const lastShipment = allShipments[allShipments.length - 1];  
-        const lastNumber = parseInt(lastShipment.id.replace('SH', ''));  
-        lastId = lastNumber;  
-      }  
-    }  
-      
-    return `SH${lastId + 1}`;  
-  };  
+ const generateShipmentId = () => {  
+  let lastId = 1000;
+
+  if (shipments.length > 0) {
+    const lastShipment = shipments[shipments.length - 1];
+    const lastNumber = parseInt(lastShipment.shipmentId?.replace('SH', '') || lastId);
+    lastId = lastNumber;
+  }
+
+  return `SH${lastId + 1}`;
+};
+ 
   
   // Filter suggestions  
   const filterOriginSuggestions = (input) => {  
@@ -513,41 +532,27 @@ const handleBookingSubmit = () => {
     }));  
   };  
   
-const handleAddShipment = async (e) => {
-  e.preventDefault();
-
-  const shipmentId = generateShipmentId();
-
-  const shipmentPayload = {
-    shipmentId,
-    ...newShipment,
-    status: newShipment.status || "Scheduled",
-    createdAt: new Date().toISOString()
-  };
-
+const handleAddShipment = async (newShipment) => {
   try {
-    const res = await fetch(`${API_URL}/api/shipments`, {
+    // Generate unique shipmentId
+    const uniqueId = `SH${Date.now()}`; // e.g., SH1700000000000
+    const shipmentData = { ...newShipment, shipmentId: uniqueId };
+
+    const res = await fetch("https://transport1-zy7c.onrender.com/api/shipments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(shipmentPayload)
+      body: JSON.stringify(shipmentData),
     });
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Failed to create shipment");
-    }
+    const data = await res.json();
+    if (!res.ok) throw new Error(JSON.stringify(data));
 
-    const savedShipment = await res.json();
-
-    setShipments(prev => [savedShipment, ...prev]);
-    setShowAddForm(false);
-
-    addNotification(`Shipment ${shipmentId} created successfully`, "success");
-  } catch (err) {
-    console.error("Shipment save failed:", err);
-    alert("Failed to save shipment");
+    alert("Shipment added successfully!");
+  } catch (error) {
+    console.error("Shipment save failed:", error);
   }
 };
+
 
   
   // Shipment actions  
@@ -582,6 +587,15 @@ const handleDeleteShipment = async (mongoId) => {
   // const handleViewDetails = (shipmentId) => {  
   //   navigate(`/shipment-details/${shipmentId}?userId=${userId}&role=${role}`);  
   // };  
+
+  const handleEditShipment = (mongoId) => {
+  navigate(`/edit-shipment/${mongoId}?role=${role}`);
+};
+
+const handleViewDetails = (mongoId) => {
+  navigate(`/shipment-details/${mongoId}?role=${role}`);
+};
+
   
   // Booking actions  
 const handleUpdateBookingStatus = (bookingId, newStatus) => {
@@ -714,13 +728,10 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
  
            {/* Add New Shipment Button - UPDATED */}  
           {activeTab === 'shipments' && (  
-            <button   
-              className="btn btn-primary"  
-              onClick={() => setShowAddForm(true)}  
-            >  
-              <i className="fas fa-plus"></i>  
-              {t('dashboard.newShipment')}
-            </button>  
+            <button className="btn btn-primary" onClick={openAddForm}>
+  <i className="fas fa-plus"></i> {t('dashboard.newShipment')}
+</button>
+  
           )}  
   
              <div className="notification-badge" onClick={() => setShowNotifications(!showNotifications)}>
@@ -912,10 +923,14 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
               <h2>{t('form.addNewShipment')}</h2>  
               <div className="form-header-info">  
                 <span className="shipment-id-preview">ID: {generateShipmentId()}</span>  
-                <button className="save-btn" onClick={handleAddShipment}>  
-                  <i className="fas fa-save"></i>  
-                  {t('form.saveShipment')}
-                </button>  
+                <button 
+  className="save-btn" 
+  onClick={() => handleAddShipment(newShipment)}
+>
+  <i className="fas fa-save"></i>
+  {t('form.saveShipment')}
+</button>
+
               </div>  
             </div>  
 
@@ -1256,7 +1271,7 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                     <div className="shipment-actions">  
                       <button   
                         className="action-btn primary"  
-                        onClick={() => handleViewDetails(shipment.id)}  
+                        onClick={() => handleViewDetails(shipment._id)}  
                       >  
                         <i className="fas fa-info-circle"></i>  
                         {t('shipments.details')}  
@@ -1264,14 +1279,15 @@ const handleUpdateBookingStatus = (bookingId, newStatus) => {
                         
                       <button   
                         className="action-btn secondary"  
-                        onClick={() => handleEditShipment(shipment.id)}  
+                        onClick={() => handleEditShipment(shipment._id)}  
                       >  
                         <i className="fas fa-edit"></i>  
                         {t('shipments.edit')} 
                       </button>  
                       <button   
                         className="action-btn danger"  
-                        onClick={() => handleDeleteShipment(shipment.id)}  
+                        onClick={() => handleDeleteShipment(shipment._id)}
+ 
                       >  
                         <i className="fas fa-trash"></i>  
                         {t('shipments.delete')}  

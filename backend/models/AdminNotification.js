@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// models/AdminNotification.js
+import mongoose from "mongoose";
 
 const adminNotificationSchema = new mongoose.Schema({
   userId: String,
@@ -11,4 +12,5 @@ const adminNotificationSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("AdminNotification", adminNotificationSchema);
+const AdminNotification = mongoose.model("AdminNotification", adminNotificationSchema);
+export default AdminNotification;

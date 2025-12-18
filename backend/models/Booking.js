@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+// Booking.js
+import mongoose from "mongoose";
 
 const BookingSchema = new mongoose.Schema({
   bookingId: String,
@@ -15,4 +16,6 @@ const BookingSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Booking", BookingSchema);
+const Booking = mongoose.model("Booking", BookingSchema);
+
+export default Booking; // ✅ default export for ESM

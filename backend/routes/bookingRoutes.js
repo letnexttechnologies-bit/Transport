@@ -1,10 +1,13 @@
-const express = require("express");
+// bookingRoutes.js
+import express from "express";
+import * as controller from "../controllers/bookingController.js"; // .js extension required
+import { protect, adminOnly } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
-const controller = require("../controllers/bookingController");
 
-router.post("/", controller.createBooking);
-router.get("/", controller.getBookings);
-router.put("/:id", controller.updateBookingStatus);
-router.delete("/:id", controller.deleteBooking);
+router.post("/", protect, controller.createBooking);
+router.get("/", protect, adminOnly, controller.getBookings);
+router.put("/:id", protect, controller.updateBookingStatus);
+router.delete("/:id", protect, adminOnly, controller.deleteBooking);
 
-module.exports = router;
+export default router;

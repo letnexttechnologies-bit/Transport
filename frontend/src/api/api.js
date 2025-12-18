@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+// api.js
+const BASE_URL = import.meta.env.VITE_BASE_URL; // e.g., https://transport1-zy7c.onrender.com
 const API_URL = `${BASE_URL}/api`;
 
 /* =========================
@@ -9,34 +10,31 @@ export const registerUser = async (formData) => {
     const res = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      credentials: "include", // ✅ IMPORTANT
-      body: JSON.stringify(formData)
+      // ⚠️ Remove credentials if you don't use cookies
+      // credentials: "include",
+      body: JSON.stringify(formData),
     });
 
-    const contentType = res.headers.get("content-type");
-    const data =
-      contentType && contentType.includes("application/json")
-        ? await res.json()
-        : null;
+    const data = await res.json();
 
     if (!res.ok) {
       return {
         success: false,
-        message: data?.message || "Registration failed"
+        message: data?.message || "Registration failed",
       };
     }
 
     return {
       success: true,
-      message: data?.message || "Registration successful"
+      message: data?.message || "Registration successful",
     };
   } catch (error) {
     console.error("Register error:", error);
     return {
       success: false,
-      message: "Network error. Please try again."
+      message: "Network error. Please try again.",
     };
   }
 };
@@ -49,41 +47,39 @@ export const loginUser = async (formData) => {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      credentials: "include", // ✅ IMPORTANT
-      body: JSON.stringify(formData)
+      // ⚠️ Remove credentials if you don't use cookies
+      // credentials: "include",
+      body: JSON.stringify(formData),
     });
 
-    const contentType = res.headers.get("content-type");
-    const data =
-      contentType && contentType.includes("application/json")
-        ? await res.json()
-        : null;
+    const data = await res.json();
 
     if (!res.ok) {
       return {
         success: false,
-        message: data?.message || "Login failed"
+        message: data?.message || "Login failed",
       };
     }
 
+    // ✅ Use MongoDB _id
     return {
       success: true,
       token: data?.token,
       user: {
-        _id: data?.user?.id,
+        _id: data?.user?._id,
         name: data?.user?.name,
         phone: data?.user?.phone,
         vehicleNumber: data?.user?.vehicleNumber,
-        role: data?.user?.role
-      }
+        role: data?.user?.role,
+      },
     };
   } catch (error) {
     console.error("Login error:", error);
     return {
       success: false,
-      message: "Network error. Please try again."
+      message: "Network error. Please try again.",
     };
   }
 };

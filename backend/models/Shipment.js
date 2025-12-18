@@ -1,7 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ShipmentSchema = new mongoose.Schema({
-  shipmentId: { type: String, unique: true },
+  shipmentId: {
+    type: String,
+    unique: true,
+    required: true
+  },
   vehicleType: String,
   status: String,
   origin: String,
@@ -25,4 +29,4 @@ const ShipmentSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Shipment", ShipmentSchema);
+export default mongoose.model("Shipment", ShipmentSchema);

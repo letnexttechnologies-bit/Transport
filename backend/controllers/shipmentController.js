@@ -1,24 +1,58 @@
-const Shipment = require("../models/Shipment");
+import Shipment from "../models/Shipment.js";
 
-// CREATE
-exports.createShipment = async (req, res) => {
+// GET all shipments
+export const getAllShipments = async (req, res) => {
   try {
-    const shipment = new Shipment(req.body);
-    await shipment.save();
-    res.status(201).json(shipment);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const shipments = await Shipment.find().sort({ createdAt: -1 });
+    res.status(200).json(shipments);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
-// READ
-exports.getShipments = async (req, res) => {
-  const shipments = await Shipment.find().sort({ createdAt: -1 });
-  res.json(shipments);
+// GET shipment by ID
+export const getShipmentById = async (req, res) => {
+  try {
+    const shipment = await Shipment.findById(req.params.id);
+    if (!shipment) {
+      return res.status(404).json({ message: "Shipment not found" });
+    }
+    res.status(200).json(shipment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// DELETE
-exports.deleteShipment = async (req, res) => {
-  await Shipment.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
+// UPDATE shipment
+export const updateShipment = async (req, res) => {
+  try {
+    const updatedShipment = await Shipment.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedShipment) {
+      return res.status(404).json({ message: "Shipment not found" });
+    }
+
+    res.status(200).json(updatedShipment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE shipment
+export const deleteShipment = async (req, res) => {
+  try {
+    const shipment = await Shipment.findByIdAndDelete(req.params.id);
+
+    if (!shipment) {
+      return res.status(404).json({ message: "Shipment not found" });
+    }
+
+    res.status(200).json({ message: "Shipment deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

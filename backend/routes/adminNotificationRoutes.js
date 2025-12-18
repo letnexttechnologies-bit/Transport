@@ -1,47 +1,14 @@
-const express = require("express");
-const AdminNotification = require("../models/AdminNotification");
+// adminNotificationRoutes.js
+import express from "express";
+import * as controller from "../controllers/adminNotificationController.js"; // .js extension required
+import { protect, adminOnly } from "../middleware/authMiddleware.js"; // .js extension required
 
 const router = express.Router();
 
-/* =========================
-   GET ALL ADMIN NOTIFICATIONS
-========================= */
-router.get("/", async (req, res) => {
-  try {
-    const notifications = await AdminNotification
-      .find()
-      .sort({ timestamp: -1 });
+// Only admin can create notifications
+router.post("/", protect, adminOnly, controller.createAdminNotification);
+router.get("/", protect, adminOnly, controller.getAdminNotifications);
+router.put("/:id", protect, adminOnly, controller.updateAdminNotification);
+router.delete("/:id", protect, adminOnly, controller.deleteAdminNotification);
 
-    res.json(notifications);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/* =========================
-   MARK AS READ
-========================= */
-router.put("/:id/read", async (req, res) => {
-  try {
-    await AdminNotification.findByIdAndUpdate(req.params.id, {
-      read: true
-    });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-/* =========================
-   CLEAR ALL
-========================= */
-router.delete("/clear", async (req, res) => {
-  try {
-    await AdminNotification.deleteMany({});
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-module.exports = router;
+export default router;

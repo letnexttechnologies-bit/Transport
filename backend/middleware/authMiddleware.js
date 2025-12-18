@@ -1,6 +1,7 @@
-const jwt = require("jsonwebtoken");
+// authMiddleware.js
+import jwt from "jsonwebtoken";
 
-const protect = (req, res, next) => {
+export const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -17,11 +18,9 @@ const protect = (req, res, next) => {
   }
 };
 
-const adminOnly = (req, res, next) => {
-  if (req.user.role !== "admin") {
+export const adminOnly = (req, res, next) => {
+  if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Admin access only" });
   }
   next();
 };
-
-module.exports = { protect, adminOnly };
