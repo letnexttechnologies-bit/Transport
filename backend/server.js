@@ -25,7 +25,7 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://lnttrucks.netlify.app",
+  "https://transport-waala.netlify.app/",
 ];
 
 //  Create Express app + server

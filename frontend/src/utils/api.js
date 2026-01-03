@@ -145,7 +145,7 @@ export const getImageUrl = (imagePath, placeholder = '/Truck Images.jpeg') => {
   }
   
   // Otherwise, assume it's a relative path and prepend backend URL
-  const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const backendUrl = import.meta.env.VITE_API_URL || `${BASE_URL}`;
   return `${backendUrl}${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`;
 };
 console.log("API URL:", import.meta.env.VITE_API_URL);
