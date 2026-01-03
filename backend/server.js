@@ -25,8 +25,8 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://transport-waala.netlify.app/",
-  "https://transport-1-eoxq.onrender.com",
+  "https://transport-waala.netlify.app",
+  "https://transport-1-eoxq.onrender.com"
 ];
 
 //  Create Express app + server
@@ -42,16 +42,29 @@ const io = new Server(httpServer, {
   },
 });
 
-// Initialize socket handlers
-initSocket(io);
 
+// Initialize socket handlers
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // allow requests with no origin (Postman, mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log("Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
+// IMPORTANT: handle preflight
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
