@@ -26,6 +26,7 @@ connectDB();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://transport-waala.netlify.app/",
+  "https://transport-1-eoxq.onrender.com",
 ];
 
 //  Create Express app + server

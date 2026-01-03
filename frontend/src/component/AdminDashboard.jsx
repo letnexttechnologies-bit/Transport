@@ -62,7 +62,7 @@ const changeLanguage = (lng) => {
 
   useEffect(() => {
     // Initialize socket connection with error handling
-    const socketUrl = import.meta.env.VITE_SOCKET_URL || `${BASE_URL}`;
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
     
     try {
       socketRef.current = io(socketUrl, {
