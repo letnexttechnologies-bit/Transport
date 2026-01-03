@@ -1,0 +1,730 @@
+/* Reset to remove default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main Container - Full Page Coverage */
+.role-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  width: 100dvw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #191919 0%, #2a2929 50%, #282828 100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+/* Animated Background */
+.role-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(0, 0, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
+  animation: float 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+/* Particle Animation */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: float-particle 15s infinite linear;
+}
+
+@keyframes float-particle {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+}
+
+/* Card Box */
+.role-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 50px 40px;
+  width: 100%;
+  max-width: 450px;
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  text-align: center;
+  animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1), cardGlow 4s ease-in-out infinite alternate;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-10px) rotateX(5deg);
+}
+
+@keyframes cardGlow {
+  0% {
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    box-shadow: 
+      0 25px 70px rgba(0, 0, 0, 0.25),
+      0 12px 40px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+}
+
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 24px 24px 0 0;
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: -200% 0;
+  }
+  50% {
+    background-position: 200% 0;
+  }
+}
+
+/* Logo/Icon */
+.logo-container {
+  margin-bottom: 24px;
+  position: relative;
+  display: inline-block;
+}
+
+.emoji {
+  font-size: 64px;
+  margin-bottom: 0;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  line-height: 1;
+   background: linear-gradient(135deg, #000000 0%, #767676 50%, #000000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Title */
+.role-title {
+  font-size: 32px;
+  color: #000000;
+  margin-bottom: 8px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #000000 0%, #000000 50%, #000000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  position: relative;
+  display: inline-block;
+}
+
+.role-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 25%;
+  width: 50%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #1a73e8, transparent);
+  border-radius: 2px;
+}
+
+/* Subtitle */
+.role-subtitle {
+  color: #000000;
+  font-size: 16px;
+  margin-bottom: 40px;
+  line-height: 1.5;
+  font-weight: 500;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Buttons Container */
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Buttons */
+.role-btn {
+  width: 100%;
+  padding: 18px 24px;
+  font-size: 17px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  font-family: inherit;
+  display: block;
+  text-decoration: none;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  margin-top: 16px;
+
+}
+
+/* Remove any gap/line by ensuring proper button styling */
+.role-btn,
+.role-btn:link,
+.role-btn:visited,
+.role-btn:hover,
+.role-btn:active {
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
+
+.role-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.role-btn:hover::before {
+  left: 100%;
+}
+
+.role-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.role-btn:hover::after {
+  opacity: 1;
+}
+
+/* Admin Button */
+.role-btn.admin {
+  background: linear-gradient(135deg, #000000 0%, #000000 50%, #000000 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 24px rgba(26, 115, 232, 0.4);
+}
+
+.role-btn.admin:hover {
+  transform: translateY(-6px) translateZ(10px);
+  box-shadow: 
+    0 12px 32px rgba(26, 115, 232, 0.5),
+    0 8px 20px rgba(26, 115, 232, 0.4);
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+}
+
+/* User Button */
+.role-btn.user {
+  background: linear-gradient(135deg, #ffffff, #e8f0fe);
+  color: #000000;
+  border: 2px solid #000000;
+  box-shadow: 0 6px 24px rgba(26, 115, 232, 0.2);
+}
+
+.role-btn.user:hover {
+  transform: translateY(-6px) translateZ(10px);
+  box-shadow: 
+    0 12px 32px rgba(26, 115, 232, 0.3),
+    0 8px 20px rgba(26, 115, 232, 0.2);
+  background: linear-gradient(135deg, #e8f0fe, #dbeafe);
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.role-btn.user::before {
+  background: linear-gradient(90deg, transparent, rgba(26, 115, 232, 0.2), transparent);
+}
+
+.role-btn.user::after {
+  background: linear-gradient(135deg, rgba(0,0,0,0.05), transparent);
+}
+
+/* Button Press Effect */
+.role-btn:active {
+  transform: scale(0.98) translateY(-2px);
+  transition: transform 0.1s ease;
+}
+
+/* Button Icons */
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.role-btn:hover .btn-icon {
+  transform: translateX(5px);
+}
+
+/* Fade Up Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Footer */
+.footer {
+  margin-top: 30px;
+  color: #94a3b8;
+  font-size: 14px;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* RESPONSIVE DESIGN */
+
+/* Small Mobile Devices */
+@media (max-width: 380px) {
+  .role-container {
+    padding: clamp(12px, 4vw, 16px);
+  }
+
+  .role-card {
+    padding: clamp(32px, 8vw, 40px) clamp(20px, 5vw, 24px);
+    border-radius: clamp(18px, 4vw, 20px);
+    max-width: calc(100vw - 24px);
+  }
+
+  .emoji {
+    font-size: clamp(48px, 12vw, 52px);
+    margin-bottom: clamp(12px, 3vw, 16px);
+  }
+
+  .role-title {
+    font-size: clamp(24px, 6vw, 26px);
+    line-height: 1.2;
+  }
+
+  .role-subtitle {
+    font-size: clamp(14px, 3.5vw, 15px);
+    margin-bottom: clamp(28px, 7vw, 32px);
+    line-height: 1.5;
+  }
+
+  .role-btn {
+    font-size: clamp(15px, 3.5vw, 16px);
+    padding: clamp(14px, 3.5vw, 16px) clamp(18px, 4.5vw, 20px);
+    border-radius: clamp(12px, 3vw, 14px);
+    min-height: 48px; /* Extra touch-friendly */
+    margin-top: clamp(12px, 3vw, 14px);
+  }
+
+  .language-selector {
+    top: clamp(10px, 2.5vw, 12px);
+    right: clamp(10px, 2.5vw, 12px);
+  }
+
+  .lang-select {
+    font-size: clamp(12px, 3vw, 13px);
+    padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 12px);
+    min-height: 40px; /* Touch-friendly */
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  .role-card {
+    max-width: 480px;
+    padding: 60px 50px;
+  }
+
+  .role-title {
+    font-size: 36px;
+  }
+
+  .role-subtitle {
+    font-size: 17px;
+  }
+
+  .role-btn {
+    font-size: 18px;
+    padding: 20px 24px;
+  }
+}
+
+/* Large Screens */
+@media (min-width: 1024px) {
+  .role-container {
+    padding: 40px;
+  }
+
+  .role-card {
+    max-width: 500px;
+    padding: 70px 60px;
+  }
+
+  .emoji {
+    font-size: 72px;
+  }
+
+  .role-title {
+    font-size: 38px;
+  }
+
+  .role-buttons {
+    gap: 20px;
+  }
+}
+
+/* Extra Large Screens */
+@media (min-width: 1440px) {
+  .role-card {
+    max-width: 520px;
+    padding: 80px 70px;
+  }
+}
+
+/* Ultra Wide Screens */
+@media (min-width: 2000px) {
+  .role-container {
+    padding: 60px;
+  }
+  
+  .role-card {
+    max-width: 560px;
+    padding: 90px 80px;
+  }
+  
+  .role-title {
+    font-size: 42px;
+  }
+  
+  .role-subtitle {
+    font-size: 18px;
+  }
+  
+  .role-btn {
+    font-size: 20px;
+    padding: 22px 28px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .role-card,
+  .emoji,
+  .role-btn,
+  .role-container::before,
+  .role-card::before,
+  .particle,
+  .logo-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .role-btn:hover,
+  .role-card:hover {
+    transform: none !important;
+  }
+}
+
+/* Focus styles for accessibility */
+.role-btn:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+.role-btn.user:focus {
+  outline: 3px solid rgba(0, 0, 0, 0.5);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .role-card {
+    background: white;
+    border: 2px solid #1a73e8;
+  }
+  
+  .role-title {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #1a73e8;
+  }
+  
+  .role-subtitle {
+    color: #2563eb;
+  }
+}
+
+/* =========================
+   LANGUAGE SELECTOR
+========================= */
+.language-selector {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+}
+
+.lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e293b;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.lang-select:hover {
+  background: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.lang-select:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Dropdown arrow */
+.lang-select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 18px;
+  padding-right: 36px;
+}
+/* =========================
+   MOBILE FIXES ONLY
+========================= */
+
+/* Fix mobile viewport + keyboard issues */
+@media (max-width: 768px) {
+  .role-container {
+    position: absolute;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .role-card:hover {
+    transform: none;
+  }
+
+  .role-btn:hover {
+    transform: none;
+  }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 380px) {
+  .role-container {
+    padding: 14px;
+  }
+
+  .role-card {
+    padding: 36px 22px;
+  }
+
+  .emoji {
+    font-size: 48px;
+  }
+
+  .role-title {
+    font-size: 24px;
+  }
+
+  .role-subtitle {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .role-btn {
+    font-size: 15px;
+    padding: 14px 18px;
+  }
+
+  .language-selector {
+    top: 10px;
+    right: 10px;
+  }
+
+  .lang-select {
+    font-size: 13px;
+    padding: 6px 12px;
+    padding-right: 34px;
+  }
+}
+
+/* Extra small devices (very compact phones) */
+@media (max-width: 320px) {
+  .role-card {
+    padding: 30px 18px;
+  }
+
+  .role-title {
+    font-size: 22px;
+  }
+
+  .role-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+/* Touch devices – disable hover-only effects */
+@media (hover: none) and (pointer: coarse) {
+  .role-card:hover,
+  .role-btn:hover,
+  .role-btn.admin:hover,
+  .role-btn.user:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+
+  .role-btn:hover::before,
+  .role-btn:hover::after {
+    display: none;
+  }
+}

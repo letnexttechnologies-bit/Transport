@@ -1,0 +1,293 @@
+/* =========================
+   NOTIFICATION WRAPPER
+========================= */
+.user-notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* =========================
+   NOTIFICATION BELL
+========================= */
+.user-notification-bell {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.user-notification-bell:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.user-notification-bell img {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+/* =========================
+   NOTIFICATION BADGE
+========================= */
+.user-notification-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #ff3b30;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+.user-notification-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 320px;
+  max-height: 420px;
+  background: #ffffff;
+  color: #333333;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  z-index: 1000;
+  animation: fadeSlideDown 0.25s ease;
+}
+
+/* =========================
+   HEADER
+========================= */
+.user-notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.user-notification-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.user-notification-header button {
+  background: transparent;
+  border: none;
+  color: #6366f1;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.user-notification-header button:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   LIST
+========================= */
+.user-notification-list {
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+.user-no-notifications {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* =========================
+   ITEM
+========================= */
+.user-notification-item {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.user-notification-item:last-child {
+  border-bottom: none;
+}
+
+.user-notification-item small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* =========================
+   TYPES
+========================= */
+.user-notification-item.success {
+  background: #ecfdf5;
+}
+
+.user-notification-item.warning {
+  background: #fff7ed;
+}
+
+.user-notification-item.info {
+  background: #eff6ff;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 480px) {
+  .user-notification-dropdown {
+    width: 280px;
+    right: -40px;
+  }
+}
+/* =========================
+   RESPONSIVE FIXES – USER NOTIFICATIONS
+   (NO DESKTOP CHANGES)
+========================= */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .user-notification-dropdown {
+    width: 300px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 480px) {
+  .user-notification-wrapper {
+    position: static;
+  }
+
+  .user-notification-bell {
+    width: 46px;
+    height: 46px;
+  }
+
+  .user-notification-bell img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .user-notification-badge {
+    top: 5px;
+    right: 5px;
+    min-width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+
+  .user-notification-dropdown {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100vw - 32px);
+    max-width: 340px;
+    max-height: 70vh;
+    border-radius: 16px;
+  }
+
+  .user-notification-list {
+    max-height: calc(70vh - 55px);
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .user-notification-bell {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-notification-bell img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .user-notification-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+  }
+
+  .user-notification-dropdown {
+    width: calc(100vw - 24px);
+    max-width: 320px;
+  }
+
+  .user-notification-header {
+    padding: 0.8rem 0.9rem;
+  }
+
+  .user-notification-header h4 {
+    font-size: 0.95rem;
+  }
+
+  .user-notification-item {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Large Tablets */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .user-notification-dropdown {
+    width: 340px;
+  }
+}
+
+/* Touch Devices – Disable hover lift */
+@media (hover: none) and (pointer: coarse) {
+  .user-notification-bell:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .user-notification-dropdown {
+    animation: none;
+  }
+}

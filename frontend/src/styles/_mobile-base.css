@@ -1,0 +1,71 @@
+/* =========================
+   PROFESSIONAL MOBILE BASE STYLES
+   Best Practices: Clean, Focused, Touch-Friendly
+========================= */
+
+/* Prevent horizontal scrolling */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Touch-friendly minimum sizes */
+button, 
+a, 
+input[type="button"], 
+input[type="submit"],
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Readable font sizes on mobile */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px; /* Prevents zoom on iOS */
+    line-height: 1.5;
+  }
+
+  h1 { font-size: clamp(1.5rem, 5vw, 2rem); }
+  h2 { font-size: clamp(1.25rem, 4vw, 1.75rem); }
+  h3 { font-size: clamp(1.1rem, 3.5vw, 1.5rem); }
+  h4 { font-size: clamp(1rem, 3vw, 1.25rem); }
+  
+  p, span, div {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+}
+
+/* Proper spacing on mobile */
+@media (max-width: 768px) {
+  .container,
+  .section,
+  .card {
+    padding: clamp(12px, 4vw, 24px);
+    margin-bottom: clamp(16px, 5vw, 24px);
+  }
+}
+
+/* Focus states for accessibility */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+

@@ -1,0 +1,579 @@
+/* ============================
+   ROOT COLORS
+============================ */
+:root {
+  --primary: #1a73e8;
+  --primary-dark: #0d47a1;
+  --secondary: #34a853;
+  --warning: #f9ab00;
+  --danger: #ea4335;
+  --dark: #202124;
+  --gray: #dadce0;
+  --light-gray: #f1f3f4;
+  --white: #ffffff;
+}
+
+/* ============================
+   DASHBOARD CONTAINER
+============================ */
+.dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+  background: #f6f7fb;
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI",
+    "Noto Sans", "Noto Sans Tamil", "Noto Sans Telugu",
+    Arial, sans-serif;
+  color: var(--dark);
+}
+
+/* ============================
+   HEADER
+============================ */
+.dashboard-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: var(--white);
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* ============================
+   LANGUAGE SELECT (FIXED POSITIONING)
+============================ */
+.lang-select {
+  margin-left: auto; /* pushes to right */
+  width: 110px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-weight: 500;
+  color: #1f2937;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.lang-select:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.12);
+}
+
+.lang-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25);
+}
+
+.lang-select option {
+  font-size: 14px;
+  padding: 8px 10px;
+}
+
+/* ============================
+   USER PROFILE
+============================ */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-role {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* ============================
+   LOGOUT BUTTON
+============================ */
+.logout-btn {
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.logout-btn:hover {
+  background: #eaeaea;
+}
+
+/* ============================
+   NOTIFICATIONS
+============================ */
+.notification-badge {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.notification-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+.notification-dropdowns {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  width: 320px;
+  max-width: 92vw;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.notification-headers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+}
+
+.clear-all-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.notifications-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 14px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.notification-item:hover {
+  background: #f8f9fa;
+}
+
+.notification-item.unread {
+  background: #f0f4ff;
+  font-weight: 500;
+}
+
+.notification-message {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.no-notifications {
+  padding: 32px 20px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
+/* ============================
+   STATISTICS
+============================ */
+.statistics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 24px 28px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-title {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+/* ============================
+   SEARCH
+============================ */
+.search-bar {
+  width: calc(100% - 60px);
+  max-width: 100%;
+  margin: 0 30px 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+/* ============================
+   TABS
+============================ */
+.dashboard-tabs {
+  display: flex;
+  width: calc(100% - 60px);
+  max-width: 100%;
+  margin: 0 30px 24px;
+  background: var(--white);
+  border-radius: 14px;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.dashboard-tabs button {
+  flex: 1;
+  padding: 16px 0;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.dashboard-tabs button.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+}
+
+/* ============================
+   SECTIONS
+============================ */
+.sections-container {
+  padding: 0 28px 40px;
+}
+
+/* ============================
+   RESPONSIVE IMPROVEMENTS
+============================ */
+
+/* Tablet & Small Desktop */
+@media (max-width: 1024px) {
+  .dashboard-header {
+    padding: 16px 20px;
+  }
+
+  .statistics-grid {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .search-bar,
+  .dashboard-tabs {
+    margin: 0 20px 20px;
+    width: calc(100% - 40px);
+  }
+
+  .sections-container {
+    padding: 0 20px 40px;
+  }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(14px, 4vw, 16px);
+    gap: clamp(12px, 3vw, 14px);
+    flex-wrap: wrap;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .header-left h1 {
+    font-size: clamp(20px, 5vw, 22px);
+    line-height: 1.3;
+  }
+
+  .header-subtitle {
+    font-size: clamp(12px, 2.5vw, 13px);
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: clamp(10px, 2.5vw, 12px);
+  }
+
+  .lang-select {
+    order: -1;
+    align-self: flex-end;
+    min-height: 44px; /* Touch-friendly */
+    padding: clamp(10px, 2.5vw, 12px) clamp(14px, 3vw, 16px);
+  }
+
+  .statistics-grid {
+    grid-template-columns: 1fr;
+    padding: clamp(14px, 4vw, 16px);
+    gap: clamp(12px, 3vw, 14px);
+  }
+
+  .stat-card {
+    min-height: auto;
+  }
+
+  .stat-value {
+    font-size: clamp(26px, 6vw, 28px);
+  }
+
+  .stat-title {
+    font-size: clamp(13px, 2.5vw, 14px);
+  }
+
+  .search-bar {
+    margin: 0 clamp(14px, 4vw, 16px) clamp(16px, 4vw, 18px);
+    width: calc(100% - clamp(28px, 8vw, 32px));
+    padding: clamp(11px, 3vw, 12px) clamp(14px, 4vw, 16px);
+    font-size: clamp(14px, 3vw, 15px);
+    min-height: 44px; /* Touch-friendly */
+  }
+
+  .dashboard-tabs {
+    margin: 0 clamp(14px, 4vw, 16px) clamp(16px, 4vw, 18px);
+    width: calc(100% - clamp(28px, 8vw, 32px));
+    padding: clamp(5px, 1.5vw, 6px);
+  }
+
+  .dashboard-tabs button {
+    font-size: clamp(14px, 3vw, 15px);
+    padding: clamp(12px, 3vw, 14px) 0;
+    min-height: 44px; /* Touch-friendly */
+  }
+
+  .sections-container {
+    padding: 0 clamp(14px, 4vw, 16px) clamp(28px, 6vw, 32px);
+  }
+
+  .notification-dropdowns {
+    width: min(92vw, 400px);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 32px);
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .header-left h1 {
+    font-size: 20px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .lang-select {
+    width: 100%;
+    order: 0;
+    margin: 0;
+  }
+
+  .user-profile {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .notification-badge {
+    font-size: 22px;
+  }
+  
+  .statistics-grid {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-value {
+    font-size: 24px;
+  }
+  
+  .stat-title {
+    font-size: 12px;
+  }
+  
+  .search-bar {
+    margin: 0 12px 16px;
+    width: calc(100% - 24px);
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .dashboard-tabs {
+    margin: 0 12px 16px;
+    width: calc(100% - 24px);
+  }
+  
+  .dashboard-tabs button {
+    font-size: 14px;
+    padding: 12px 0;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .dashboard-header {
+    padding: 12px 14px;
+  }
+  
+  .header-left h1 {
+    font-size: 18px;
+  }
+  
+  .stat-value {
+    font-size: 22px;
+  }
+  
+  .notification-dropdowns {
+    width: 95vw;
+  }
+}
+
+/* Large Tablets & Small Desktops */
+@media (min-width: 1200px) {
+  .dashboard-header {
+    padding: 20px 28px;
+  }
+  
+  .statistics-grid {
+    padding: 24px 28px;
+  }
+  
+  .sections-container {
+    padding: 0 28px 40px;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .stat-card:hover {
+    transform: none;
+  }
+  
+  .logout-btn:hover {
+    transform: none;
+  }
+}

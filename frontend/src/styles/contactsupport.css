@@ -1,0 +1,303 @@
+/* ============================
+   CONTACT SUPPORT CONTAINER
+============================ */
+.contact-support-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f5f7fa;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ============================
+   HEADER
+============================ */
+.support-header {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+}
+
+.support-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1d29;
+  margin: 15px 0 10px 0;
+}
+
+.shipment-context {
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #4a6cf7;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+/* ============================
+   CONTENT
+============================ */
+.support-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================
+   METHODS
+============================ */
+.method-grid {
+  display: grid;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.method-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.method-card:hover {
+  border-color: #4a6cf7;
+}
+
+.method-card.active {
+  border-color: #4a6cf7;
+  background-color: #f0f3ff;
+}
+
+.method-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.method-info {
+  flex: 1;
+}
+
+.method-info h3 {
+  margin: 0 0 5px 0;
+  color: #1a1d29;
+}
+
+.method-info p {
+  margin: 0 0 5px 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.method-details {
+  color: #4a6cf7;
+  font-weight: 500;
+}
+
+.method-action {
+  color: #4a6cf7;
+  font-weight: 600;
+}
+
+/* ============================
+   MESSAGE SECTION
+============================ */
+.message-section {
+  margin: 30px 0;
+}
+
+.message-section h2 {
+  margin-bottom: 15px;
+  color: #1a1d29;
+}
+
+.message-section textarea {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* ============================
+   SHIPMENT PREVIEW
+============================ */
+.shipment-preview {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.shipment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 14px;
+}
+
+/* ============================
+   ACTION BUTTONS
+============================ */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: #4a6cf7;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #3a5ce5;
+}
+
+.btn-primary:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+/* ============================
+   RESPONSIVE FIXES
+============================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .contact-support-container {
+    padding: 16px;
+  }
+
+  .support-content {
+    padding: 24px;
+  }
+
+  .support-header h1 {
+    font-size: 24px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .support-header {
+    padding: 20px;
+  }
+
+  .support-header h1 {
+    font-size: 22px;
+  }
+
+  .support-content {
+    padding: 20px;
+  }
+
+  .method-card {
+    padding: 16px;
+  }
+
+  .method-icon {
+    font-size: 22px;
+    margin-right: 12px;
+  }
+
+  .message-section textarea {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 360px) {
+  .contact-support-container {
+    padding: 12px;
+  }
+
+  .support-header h1 {
+    font-size: 20px;
+  }
+
+  .method-info p {
+    font-size: 13px;
+  }
+  
+  .method-card {
+    padding: 14px;
+  }
+  
+  .method-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Large Tablets */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .contact-support-container {
+    max-width: 90%;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .method-card:hover {
+    border-color: #e9ecef;
+  }
+  
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,323 @@
+.report-issue-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.issue-header {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+}
+
+.issue-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1d29;
+  margin: 15px 0 10px 0;
+}
+
+.issue-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.issue-form, .issue-preview {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section h2 {
+  margin-bottom: 15px;
+  color: #1a1d29;
+  font-size: 18px;
+}
+
+.issue-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.type-card {
+  padding: 20px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.type-card:hover {
+  border-color: #4a6cf7;
+}
+
+.type-card.active {
+  border-color: #4a6cf7;
+  background: #f0f3ff;
+}
+
+.type-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.type-label {
+  font-weight: 500;
+  color: #1a1d29;
+}
+
+.priority-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.priority-card {
+  padding: 15px;
+  border: 2px solid;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.priority-card:hover {
+  transform: translateY(-2px);
+}
+
+.priority-card.active {
+  background: #f8f9fa;
+}
+
+.priority-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 0 auto 8px auto;
+}
+
+.priority-label {
+  font-weight: 500;
+}
+
+.file-upload {
+  margin-top: 10px;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #4a6cf7;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.upload-button:hover {
+  background: #3a5ce5;
+}
+
+.attachments-list {
+  margin-top: 15px;
+}
+
+.attachment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.remove-file {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.preview-card {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.preview-item {
+  margin-bottom: 12px;
+}
+
+.preview-item:last-child {
+  margin-bottom: 0;
+}
+
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.priority-low { background: #d4edda; color: #155724; }
+.priority-medium { background: #fff3cd; color: #856404; }
+.priority-high { background: #ffeaa7; color: #856404; }
+.priority-urgent { background: #f8d7da; color: #721c24; }
+
+.btn-warning {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.btn-warning:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+/* =========================
+   MOBILE RESPONSIVE FIXES
+========================= */
+
+@media (max-width: 768px) {
+  .report-issue-container {
+    padding: 14px;
+  }
+
+  .issue-header {
+    padding: 20px;
+  }
+
+  .issue-header h1 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .issue-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .issue-form,
+  .issue-preview {
+    padding: 20px;
+  }
+
+  .issue-type-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .priority-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .type-card,
+  .priority-card {
+    padding: 16px;
+  }
+
+  .upload-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .attachment-item {
+    font-size: 13px;
+  }
+
+  .preview-card {
+    padding: 16px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 480px) {
+  .issue-header h1 {
+    font-size: 20px;
+  }
+
+  .issue-type-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priority-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .type-card,
+  .priority-card {
+    padding: 14px;
+  }
+
+  .priority-label,
+  .type-label {
+    font-size: 14px;
+  }
+}
+
+/* Large Tablets */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .report-issue-container {
+    max-width: 95%;
+  }
+  
+  .issue-content {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .report-issue-container {
+    padding: 10px;
+  }
+  
+  .issue-header h1 {
+    font-size: 18px;
+  }
+  
+  .issue-form,
+  .issue-preview {
+    padding: 16px;
+  }
+  
+  .type-card,
+  .priority-card {
+    padding: 12px;
+  }
+}
+
+/* Touch devices – disable hover lift */
+@media (hover: none) and (pointer: coarse) {
+  .type-card:hover,
+  .priority-card:hover {
+    transform: none;
+  }
+  
+  .upload-button:hover {
+    background: #4a6cf7;
+  }
+}

@@ -1,0 +1,371 @@
+.shipment-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.shipment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  /* background: #3b82f6; */
+  transition: width 0.3s ease;
+}
+
+.shipment-card:hover::before {
+  width: 6px;
+}
+
+.shipment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.shipment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.shipment-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.in-transit {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-badge.at-warehouse {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.scheduled {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.shipment-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.route-point {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.route-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.origin-dot {
+  background: #10b981;
+}
+
+.destination-dot {
+  background: #ef4444;
+}
+
+.route-text {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.route-line {
+  flex: 0 0 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.route-arrow {
+  color: #64748b;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.shipment-details {
+  margin-bottom: 20px;
+}
+
+.eta-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.eta-label {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.eta-value {
+  font-size: 16px;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.shipment-footer {
+  display: flex;
+  gap: 12px;
+}
+
+.track-btn, .details-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.track-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.track-btn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.details-btn {
+  background: transparent;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+}
+
+.details-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .shipment-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .shipment-route {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .route-line {
+    transform: rotate(90deg);
+  }
+  
+  .shipment-footer {
+    flex-direction: column;
+  }
+}
+/* =========================
+   MOBILE RESPONSIVE FIXES
+========================= */
+
+/* Tablets & small laptops */
+@media (max-width: 768px) {
+  .shipment-card {
+    padding: 20px;
+  }
+
+  .shipment-title {
+    font-size: 17px;
+  }
+
+  .shipment-route {
+    padding: 14px;
+  }
+
+  .route-text {
+    font-size: 13px;
+  }
+
+  .track-btn,
+  .details-btn {
+    font-size: 14px;
+    padding: 12px;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .shipment-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .shipment-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .shipment-title {
+    font-size: 16px;
+  }
+
+  .status-badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  .shipment-route {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .route-point {
+    justify-content: center;
+  }
+
+  .route-line {
+    transform: rotate(90deg);
+    height: 24px;
+  }
+
+  .eta-section {
+    font-size: 13px;
+  }
+
+  .eta-value {
+    font-size: 15px;
+  }
+
+  .shipment-footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .track-btn,
+  .details-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .shipment-card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .shipment-title {
+    font-size: 15px;
+  }
+
+  .status-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .shipment-route {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .route-text {
+    font-size: 12px;
+  }
+
+  .eta-section {
+    font-size: 12px;
+  }
+
+  .eta-value {
+    font-size: 14px;
+  }
+
+  .track-btn,
+  .details-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Large Tablets & Small Desktops */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .shipment-card {
+    padding: 28px;
+  }
+
+  .shipment-title {
+    font-size: 19px;
+  }
+}
+
+/* Large Desktops */
+@media (min-width: 1200px) {
+  .shipment-card {
+    padding: 30px;
+  }
+}
+
+/* Touch devices – remove hover lift */
+@media (hover: none) and (pointer: coarse) {
+  .shipment-card:hover {
+    transform: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .track-btn:hover,
+  .details-btn:hover {
+    transform: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

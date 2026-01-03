@@ -1,0 +1,546 @@
+/* =========================
+   USER BOOKINGS SECTION
+========================= */
+
+.user-my-bookings {
+  padding: 0 2rem 3rem;
+  background: #f8fafc;
+}
+
+.user-section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 2rem 0 1.5rem;
+}
+
+/* =========================
+   GRID
+========================= */
+
+.user-bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 2rem;
+  align-items: start;
+  width: 100%;
+}
+
+/* =========================
+   BOOKING CARD
+========================= */
+
+.user-booking-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-left: 6px solid #e2e8f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+/* =========================
+   IMAGE SECTION
+========================= */
+
+.user-booking-image-section {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.user-booking-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-booking-card > *:not(.user-booking-image-section) {
+  padding: 0 1.8rem;
+}
+
+.user-booking-header {
+  padding-top: 1.8rem;
+}
+
+.user-booking-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   STATUS BORDER COLORS
+========================= */
+
+.user-booking-card.user-status-cancelled {
+  border-left-color: #ef4444;
+}
+
+.user-booking-card.user-status-confirmed {
+  border-left-color: #10b981;
+}
+
+.user-booking-card.user-status-pending {
+  border-left-color: #f59e0b;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.user-booking-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.user-booking-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* =========================
+   STATUS BADGE
+========================= */
+
+.user-status-badge {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.user-status-badge.user-status-cancelled {
+  background: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+}
+
+.user-status-badge.user-status-confirmed {
+  background: #d1fae5;
+  color: #10b981;
+  border: 1px solid #86efac;
+}
+
+.user-status-badge.user-status-pending {
+  background: #fffbeb;
+  color: #f59e0b;
+  border: 1px solid #fcd34d;
+}
+
+/* =========================
+   DETAILS
+========================= */
+
+.user-booking-details p {
+  margin: 0.6rem 0;
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.user-booking-details strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.user-booking-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Cancel Button */
+.user-btn-cancel {
+  flex: 1;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: #fffbeb;
+  color: #f59e0b;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #fcd34d;
+  transition: all 0.25s ease;
+}
+
+.user-btn-cancel:hover {
+  background: #f59e0b;
+  color: white;
+}
+
+/* Delete Button */
+.user-btn-delete {
+  flex: 1;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: #fee2e2;
+  color: #ef4444;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #fca5a5;
+  transition: all 0.25s ease;
+}
+
+.user-btn-delete:hover {
+  background: #ef4444;
+  color: white;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.user-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  color: #64748b;
+  font-size: 1.2rem;
+}
+
+.user-empty-state p {
+  margin: 1rem 0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .user-bookings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .user-my-bookings {
+    padding: 0 1rem 2rem;
+  }
+
+  .user-booking-actions {
+    flex-direction: column;
+  }
+}
+/* =========================
+   RESPONSIVE FIXES – USER BOOKINGS
+   (NO DESKTOP CHANGES)
+========================= */
+
+/* Large Tablets */
+@media (max-width: 1200px) {
+  .user-my-bookings {
+    padding: 0 1.5rem 2.5rem;
+  }
+
+  .user-bookings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .user-my-bookings {
+    padding: 0 1.5rem 2rem;
+  }
+
+  .user-section-title {
+    font-size: 1.6rem;
+    margin: 1.75rem 0 1.25rem;
+  }
+
+  .user-bookings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Mobile & Small Tablets */
+@media (max-width: 768px) {
+  .user-my-bookings {
+    padding: 0 1rem 2rem;
+  }
+
+  .user-section-title {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1.2rem;
+  }
+
+  .user-bookings-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .user-booking-card {
+    border-radius: 20px;
+  }
+
+  .user-booking-image-section {
+    height: 180px;
+  }
+
+  .user-booking-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .user-booking-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .user-status-badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+  }
+
+  .user-booking-details p {
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+  }
+
+  .user-booking-actions {
+    gap: 0.8rem;
+    flex-direction: column;
+  }
+
+  .user-btn-cancel,
+  .user-btn-delete {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+    width: 100%;
+  }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+  .user-my-bookings {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .user-section-title {
+    font-size: 1.3rem;
+    margin: 1.25rem 0 1rem;
+  }
+
+  .user-bookings-grid {
+    gap: 1.25rem;
+  }
+
+  .user-booking-card {
+    border-radius: 16px;
+  }
+
+  .user-booking-image-section {
+    height: 160px;
+  }
+
+  .user-booking-header h3 {
+    font-size: 1rem;
+  }
+
+  .user-status-badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .user-booking-details p {
+    font-size: 0.9rem;
+  }
+
+  .user-btn-cancel,
+  .user-btn-delete {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .user-my-bookings {
+    padding: 0 0.5rem 1.25rem;
+  }
+
+  .user-section-title {
+    font-size: 1.2rem;
+  }
+
+  .user-booking-card {
+    border-radius: 14px;
+    padding: 12px;
+  }
+
+  .user-booking-image-section {
+    height: 150px;
+  }
+
+  .user-booking-header h3 {
+    font-size: 0.95rem;
+  }
+
+  .user-btn-cancel,
+  .user-btn-delete {
+    padding: 0.7rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Large Tablets & Small Desktops */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .user-my-bookings {
+    padding: 0 2rem 2.75rem;
+  }
+
+  .user-bookings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* Large Desktops */
+@media (min-width: 1200px) {
+  .user-my-bookings {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2.5rem 3rem;
+  }
+
+  .user-bookings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2.25rem;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .user-booking-card:hover {
+    transform: none;
+  }
+
+  .user-btn-cancel:hover,
+  .user-btn-delete:hover {
+    transform: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+  .user-my-bookings {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .user-section-title {
+    font-size: 1.35rem;
+    margin: 1.25rem 0 1rem;
+  }
+
+  .user-bookings-grid {
+    gap: 1.25rem;
+  }
+
+  .user-booking-card {
+    border-radius: 18px;
+  }
+
+  .user-booking-image-section {
+    height: 160px;
+  }
+
+  .user-booking-header {
+    padding-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-booking-header h3 {
+    font-size: 1rem;
+  }
+
+  .user-status-badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+  }
+
+  .user-booking-details p {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+  }
+
+  .user-booking-actions {
+    margin-top: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .user-btn-cancel,
+  .user-btn-delete {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+    width: 100%;
+  }
+
+  .user-empty-state {
+    padding: 3rem 1.5rem;
+    font-size: 0.95rem;
+    border-radius: 20px;
+  }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+  .user-my-bookings {
+    padding: 0 0.5rem 1.25rem;
+  }
+
+  .user-section-title {
+    font-size: 1.2rem;
+  }
+
+  .user-booking-card {
+    border-radius: 16px;
+  }
+
+  .user-booking-image-section {
+    height: 140px;
+  }
+
+  .user-booking-header h3 {
+    font-size: 0.95rem;
+  }
+
+  .user-booking-details p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Touch Devices – Disable hover lift */
+@media (hover: none) and (pointer: coarse) {
+  .user-booking-card:hover {
+    transform: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+}
